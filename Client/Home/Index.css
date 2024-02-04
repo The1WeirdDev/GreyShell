@@ -3,10 +3,32 @@ body{
     /*rgb(51, 102, 255)*/
 }
 
-.navbar{
-    display:flex;
+h1{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+a{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+a:link{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+a:visited{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+.navbar{
+    display:flex;
+    justify-content: space-between;
+}
+
+.navbar-left{
+    display:flex;
+    justify-content: space-between;
+}
+.navbar-right{
+    display:flex;
+    justify-content: space-between;
+}
 .navbar-button{
     padding:10px 5px 4px 10px;
     margin-left:10px;
@@ -17,7 +39,6 @@ body{
 }
 .navbar-button > a{
     margin-left:10px;
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size:30px;
     color:rgb(50,50,50);
     top:30px;

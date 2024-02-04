@@ -3,6 +3,8 @@ const fs = require("fs");
 const Mime = require("./../Utils/Mime.js");
 
 const Logger = require("./../Utils/Logger.js");
+const WebPages = require("./../Utils/WebPages.js");
+
 class ExpressServer{
     static Start(port){
         if(typeof(port) !== "number"){
@@ -35,21 +37,63 @@ class ExpressServer{
                 return;
             }
 
-            if(url == "/home"){
-                ExpressServer.SendUserTo(res, "Client/Home/Index.html");
+            if(url.startsWith("/home")){
+                //Is a game
+                url = url.slice("/home".length);
+
+                if(url == "" || url == "/"){
+                    ExpressServer.SendUserTo(res, "Client/Home/Index.html");
+                    return;
+                }
+
+                ExpressServer.SendUserTo(res, "Client/Home/" + url);
                 return;
             }
 
             if(url.startsWith("/games")){
+                Logger.Log("TEST1 ", url);
                 //Is a game
                 url = url.slice("/games".length);
-
-                if(url == "" || url == "/"){
-                    ExpressServer.SendUserTo(res, "Client/Games/Games/Games.html");
+                if(url.endsWith("/"))
+                    url = url.slice(0, -1);
+                Logger.Log("TEST2");
+                if(url == ""){
+                    Logger.Log("Sending to game page");
+                    ExpressServer.SendUserTo(res, "Client/Games/Games/Index.html");
                     return;
                 }
 
-                ExpressServer.SendUserTo(res, "Client/Games/" + url);
+                Logger.Log("TEST3 ", url);
+                var parts = url.split("/");
+                Logger.Log(parts);
+                if(WebPages.IsGameName(parts[0])){
+                    Logger.Log("Is game ", parts[0])
+                    url = url.slice(parts[0].length + 1);
+
+                    if(url == ""){
+                        ExpressServer.SendUserTo(res, "Client/Games/" + parts[0] + "/Index.html");
+                        return;
+                    }
+
+                    ExpressServer.SendUserTo(res, "Client/Games/" + parts[0] + url.slice(parts[0].length + 1));
+                    return;
+                }
+                Logger.Log("TEST4");
+
+                ExpressServer.SendUserTo(res, "Client/Games" + url);
+                return;
+            }
+
+            if(url.startsWith("/emulators")){
+                //Is a game
+                url = url.slice("/emulators".length);
+
+                if(url == "" || url == "/"){
+                    ExpressServer.SendUserTo(res, "Client/Emulators/Emulators/Index.html");
+                    return;
+                }
+
+                ExpressServer.SendUserTo(res, "Client/Emulators/" + url);
                 return;
             }
 
