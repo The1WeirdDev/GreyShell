@@ -1,11 +1,21 @@
 class Logger{
     static Log(){
-        var string = "";
-        for(var i = 0; i < arguments.length; i++){
-            string += arguments[i] + ", ";
+        var string = arguments[0];
+        for(var i = 1; i < arguments.length; i++){
+            string += ", " + arguments[i];
         }
-
+        
         console.log(string);
     }
+    
+    static Err(){
+        var string = arguments[0];
+        for(var i = 1; i < arguments.length; i++){
+            string += ", " + arguments[i];
+        }
+
+        console.error(string);
+    }
 }
+
 module.exports = Logger;

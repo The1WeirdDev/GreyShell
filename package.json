@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/The1WeirdDev/GreyShell#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^4.18.2",
     "fs": "^0.0.1-security"
   }

@@ -1,4 +1,4 @@
 const express_server = require("./Backend/ExpressServer.js");
-const port = 80 | env.PORT;
+const port = 80 | process.env.PORT;
 
-express_server.Start();
+express_server.Start(port);
