@@ -112,6 +112,7 @@ class ExpressServer {
             );
             return;
           }
+
           ExpressServer.SendUserTo(
             res,
             "Client/Emulators/" + parts[0] + "/" + url,
