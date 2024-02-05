@@ -1,3 +1,6 @@
+body{
+    min-width:500px;
+}
 .game{
     width:200px;
     height:265px;
@@ -15,4 +18,27 @@
     font-size:30px;
     text-decoration: none;
     color:black;
+}
+
+.game-canvas-container{
+    display: flex;
+    align-items: center;
+    margin-top:75px;
+}
+
+.game-canvas-container > div{
+    width:max(500px, 37%);
+    height:500px;
+    justify-content: space-between;
+}
+.game-canvas-container > canvas{
+    margin-left:0px;
+    justify-content: space-between;
+}
+
+.game-info{
+    margin-left: auto; 
+    margin-right: 0;
+    width:150px;
+    margin-right:0px;
 }

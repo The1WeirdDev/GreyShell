@@ -51,23 +51,21 @@ class ExpressServer{
             }
 
             if(url.startsWith("/games")){
-                Logger.Log("TEST1 ", url);
                 //Is a game
                 url = url.slice("/games".length);
                 if(url.endsWith("/"))
                     url = url.slice(0, -1);
-                Logger.Log("TEST2");
+
                 if(url == ""){
-                    Logger.Log("Sending to game page");
                     ExpressServer.SendUserTo(res, "Client/Games/Games/Index.html");
                     return;
                 }
 
-                Logger.Log("TEST3 ", url);
+                if(url.startsWith("/"))
+                    url = url.slice(1);
+
                 var parts = url.split("/");
-                Logger.Log(parts);
                 if(WebPages.IsGameName(parts[0])){
-                    Logger.Log("Is game ", parts[0])
                     url = url.slice(parts[0].length + 1);
 
                     if(url == ""){
@@ -75,15 +73,21 @@ class ExpressServer{
                         return;
                     }
 
-                    ExpressServer.SendUserTo(res, "Client/Games/" + parts[0] + url.slice(parts[0].length + 1));
+                    ExpressServer.SendUserTo(res, "Client/Games/" + parts[0] + "/" + url);
                     return;
                 }
-                Logger.Log("TEST4");
 
-                ExpressServer.SendUserTo(res, "Client/Games" + url);
+
+                ExpressServer.SendUserTo(res, "Client/Games/" + url);
                 return;
             }
+            if(url.startsWith("/utils/")){
+                //Is a game
+                url = url.slice("/utils/".length);
 
+                ExpressServer.SendUserTo(res, "Client/Utils/" + url);
+                return;
+            }
             if(url.startsWith("/emulators")){
                 //Is a game
                 url = url.slice("/emulators".length);

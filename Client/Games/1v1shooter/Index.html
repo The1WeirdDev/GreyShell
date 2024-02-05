@@ -1,8 +1,8 @@
 <html>
     <head>
-        <title>Games</title>
-        <link rel="stylesheet" href="Client/Home/Index.css">
-        <link rel="stylesheet" href="games/Games/Style.css">
+        <title>Home</title>
+        <link rel="stylesheet" href="/Client/Home/Index.css">
+        <link rel="stylesheet" href="/games/Games/Style.css">
     </head>
 
     <body>
@@ -10,7 +10,7 @@
             <div class="navbar-left">
                 <div class="navbar-button">
                     <ion-icon name="home-outline"></ion-icon>
-                    <a  href="/home">Home</a>
+                    <a href="/home">Home</a>
                 </div>
                 <div class="navbar-button">
                     <ion-icon name="laptop-outline"></ion-icon>
@@ -18,7 +18,7 @@
                 </div>
                 <div class="navbar-button">
                     <ion-icon name="game-controller-outline"></ion-icon>
-                    <a class="current-page">Games</a>
+                    <a href="/games">Games</a>
                 </div>
             </div>
 
@@ -30,16 +30,8 @@
             </div>
         </div>
 
-        <div>
-            <div class="game">
-                <div>
-                    <div class="game-info"></div>
-                </div>
-                <a href="/games/snake">Snake</a>
-            </div>
-        </div>
-
-        <script src="/Client/Home/Script1.js"></script>
+        <canvas class="game-canvas" id="GameCanvas"></canvas>
+        <script type="module" src="/games/1v1shooter/Main.js"></script>
         <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     </body>
