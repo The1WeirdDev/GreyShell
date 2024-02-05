@@ -1,2 +1,8 @@
 node_modules/
 .vscode/
+.upm/
+package-lock.json
+.git
+.config
+.replit
+replit.nix
