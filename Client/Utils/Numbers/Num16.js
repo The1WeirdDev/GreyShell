@@ -10,6 +10,10 @@ export default class Num16 {
     this.value = val & 65535;
   }
 
+  Get() {
+    return this.value;
+  }
+
   Add(val) {
     this.value += val;
     this.value -= Math.floor(this.value / 65536) * 65536;

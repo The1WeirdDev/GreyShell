@@ -10,6 +10,10 @@ export default class Num8 {
     this.value = val & 255;
   }
 
+  Get() {
+    return this.value;
+  }
+
   Add(val) {
     this.value += val;
     this.value -= Math.floor(this.value / 256) * 256;
