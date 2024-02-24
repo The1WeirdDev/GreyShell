@@ -1,18 +1,18 @@
-import Game from "/games/1v1shooter/Game.js"
+import Game from "/games/1v1shooter/Game.js";
 
-function Init(){
-    Game.Init();
-    window.onbeforeunload = CleanUp;
-    Update();
+function Init() {
+  Game.Init();
+  window.onbeforeunload = CleanUp;
+  Update();
 }
-function Update(){
-    Game.Update();
-    Game.Draw();
+function Update() {
+  Game.Update();
+  Game.Draw();
 
-    requestAnimationFrame(Update);
+  requestAnimationFrame(Update);
 }
-function CleanUp(){
-    Game.CleanUp();
+function CleanUp() {
+  Game.CleanUp();
 }
 
-Init();
+window.onload = Init;

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<!-- saved from url=(0074)https://rylev.github.io/DMG-01/public/book/cpu/executing_instructions.html -->
+<html lang="en" class="js sidebar-visible light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Book generated using mdBook -->
+        
+        <title>Instruction Execution and Control Flow - DMG-01: How to Emulate a Game Boy</title>
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="rgba(0, 0, 0, 0)">
+
+        <link rel="shortcut icon" href="https://rylev.github.io/DMG-01/public/book/favicon.png">
+        <link rel="stylesheet" href="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/variables.css">
+        <link rel="stylesheet" href="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/general.css">
+        <link rel="stylesheet" href="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/chrome.css">
+        <link rel="stylesheet" href="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/font-awesome.css">
+        <link href="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/css" rel="stylesheet" type="text/css">
+        <link href="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/css(1)" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/highlight.css">
+        <link rel="stylesheet" href="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/tomorrow-night.css" disabled="">
+        <link rel="stylesheet" href="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/ayu-highlight.css" disabled="">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    <style>@keyframes react-loading-skeleton {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.react-loading-skeleton {
+  --base-color: #ebebeb;
+  --highlight-color: #f5f5f5;
+  --animation-duration: 1.5s;
+  --animation-direction: normal;
+  --pseudo-element-display: block; /* Enable animation */
+
+  background-color: var(--base-color);
+
+  width: 100%;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  line-height: 1;
+
+  position: relative;
+  user-select: none;
+  overflow: hidden;
+  z-index: 1; /* Necessary for overflow: hidden to work correctly in Safari */
+}
+
+.react-loading-skeleton::after {
+  content: ' ';
+  display: var(--pseudo-element-display);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(
+    90deg,
+    var(--base-color),
+    var(--highlight-color),
+    var(--base-color)
+  );
+  transform: translateX(-100%);
+
+  animation-name: react-loading-skeleton;
+  animation-direction: var(--animation-direction);
+  animation-duration: var(--animation-duration);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion) {
+  .react-loading-skeleton {
+    --pseudo-element-display: none; /* Disable animation */
+  }
+}
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy9yZWFjdC1sb2FkaW5nLXNrZWxldG9uL2Rpc3Qvc2tlbGV0b24uY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7SUFDRSwyQkFBMkI7RUFDN0I7QUFDRjs7QUFFQTtFQUNFLHFCQUFxQjtFQUNyQiwwQkFBMEI7RUFDMUIsMEJBQTBCO0VBQzFCLDZCQUE2QjtFQUM3QiwrQkFBK0IsRUFBRSxxQkFBcUI7O0VBRXRELG1DQUFtQzs7RUFFbkMsV0FBVztFQUNYLHNCQUFzQjtFQUN0QixvQkFBb0I7RUFDcEIsY0FBYzs7RUFFZCxrQkFBa0I7RUFDbEIsaUJBQWlCO0VBQ2pCLGdCQUFnQjtFQUNoQixVQUFVLEVBQUUsK0RBQStEO0FBQzdFOztBQUVBO0VBQ0UsWUFBWTtFQUNaLHNDQUFzQztFQUN0QyxrQkFBa0I7RUFDbEIsTUFBTTtFQUNOLE9BQU87RUFDUCxRQUFRO0VBQ1IsWUFBWTtFQUNaLDRCQUE0QjtFQUM1Qjs7Ozs7R0FLQztFQUNELDRCQUE0Qjs7RUFFNUIsc0NBQXNDO0VBQ3RDLCtDQUErQztFQUMvQyw2Q0FBNkM7RUFDN0Msc0NBQXNDO0VBQ3RDLG1DQUFtQztBQUNyQzs7QUFFQTtFQUNFO0lBQ0UsOEJBQThCLEVBQUUsc0JBQXNCO0VBQ3hEO0FBQ0YiLCJzb3VyY2VzQ29udGVudCI6WyJAa2V5ZnJhbWVzIHJlYWN0LWxvYWRpbmctc2tlbGV0b24ge1xuICAxMDAlIHtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVgoMTAwJSk7XG4gIH1cbn1cblxuLnJlYWN0LWxvYWRpbmctc2tlbGV0b24ge1xuICAtLWJhc2UtY29sb3I6ICNlYmViZWI7XG4gIC0taGlnaGxpZ2h0LWNvbG9yOiAjZjVmNWY1O1xuICAtLWFuaW1hdGlvbi1kdXJhdGlvbjogMS41cztcbiAgLS1hbmltYXRpb24tZGlyZWN0aW9uOiBub3JtYWw7XG4gIC0tcHNldWRvLWVsZW1lbnQtZGlzcGxheTogYmxvY2s7IC8qIEVuYWJsZSBhbmltYXRpb24gKi9cblxuICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1iYXNlLWNvbG9yKTtcblxuICB3aWR0aDogMTAwJTtcbiAgYm9yZGVyLXJhZGl1czogMC4yNXJlbTtcbiAgZGlzcGxheTogaW5saW5lLWZsZXg7XG4gIGxpbmUtaGVpZ2h0OiAxO1xuXG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgdXNlci1zZWxlY3Q6IG5vbmU7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIHotaW5kZXg6IDE7IC8qIE5lY2Vzc2FyeSBmb3Igb3ZlcmZsb3c6IGhpZGRlbiB0byB3b3JrIGNvcnJlY3RseSBpbiBTYWZhcmkgKi9cbn1cblxuLnJlYWN0LWxvYWRpbmctc2tlbGV0b246OmFmdGVyIHtcbiAgY29udGVudDogJyAnO1xuICBkaXNwbGF5OiB2YXIoLS1wc2V1ZG8tZWxlbWVudC1kaXNwbGF5KTtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICB0b3A6IDA7XG4gIGxlZnQ6IDA7XG4gIHJpZ2h0OiAwO1xuICBoZWlnaHQ6IDEwMCU7XG4gIGJhY2tncm91bmQtcmVwZWF0OiBuby1yZXBlYXQ7XG4gIGJhY2tncm91bmQtaW1hZ2U6IGxpbmVhci1ncmFkaWVudChcbiAgICA5MGRlZyxcbiAgICB2YXIoLS1iYXNlLWNvbG9yKSxcbiAgICB2YXIoLS1oaWdobGlnaHQtY29sb3IpLFxuICAgIHZhcigtLWJhc2UtY29sb3IpXG4gICk7XG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWCgtMTAwJSk7XG5cbiAgYW5pbWF0aW9uLW5hbWU6IHJlYWN0LWxvYWRpbmctc2tlbGV0b247XG4gIGFuaW1hdGlvbi1kaXJlY3Rpb246IHZhcigtLWFuaW1hdGlvbi1kaXJlY3Rpb24pO1xuICBhbmltYXRpb24tZHVyYXRpb246IHZhcigtLWFuaW1hdGlvbi1kdXJhdGlvbik7XG4gIGFuaW1hdGlvbi10aW1pbmctZnVuY3Rpb246IGVhc2UtaW4tb3V0O1xuICBhbmltYXRpb24taXRlcmF0aW9uLWNvdW50OiBpbmZpbml0ZTtcbn1cblxuQG1lZGlhIChwcmVmZXJzLXJlZHVjZWQtbW90aW9uKSB7XG4gIC5yZWFjdC1sb2FkaW5nLXNrZWxldG9uIHtcbiAgICAtLXBzZXVkby1lbGVtZW50LWRpc3BsYXk6IG5vbmU7IC8qIERpc2FibGUgYW5pbWF0aW9uICovXG4gIH1cbn1cbiJdLCJzb3VyY2VSb290IjoiIn0= */</style></head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">var path_to_root = "../";</script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents" aria-hidden="false">
+            <ol class="chapter"><li><a href="https://rylev.github.io/DMG-01/public/book/introduction.html" tabindex="0"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/architecture_overview.html" tabindex="0"><strong aria-hidden="true">2.</strong> Architecture Overview</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/introduction.html" tabindex="0"><strong aria-hidden="true">3.</strong> CPU</a></li><li><ol class="section"><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/registers.html" tabindex="0"><strong aria-hidden="true">3.1.</strong> CPU Registers</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/register_data_instructions.html" tabindex="0"><strong aria-hidden="true">3.2.</strong> Instructions on Register Data</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/executing_instructions.html" class="active" tabindex="0"><strong aria-hidden="true">3.3.</strong> Instruction Execution and Control Flow</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/reading_and_writing_memory.html" tabindex="0"><strong aria-hidden="true">3.4.</strong> Instructions for Reading and Writting to Memory</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/conclusion.html" tabindex="0"><strong aria-hidden="true">3.5.</strong> Finishing Up the CPU</a></li></ol></li><li><a href="https://rylev.github.io/DMG-01/public/book/graphics/introduction.html" tabindex="0"><strong aria-hidden="true">4.</strong> Graphics</a></li><li><ol class="section"><li><a href="https://rylev.github.io/DMG-01/public/book/graphics/tile_ram.html" tabindex="0"><strong aria-hidden="true">4.1.</strong> Tile RAM</a></li></ol></li><li><a href="https://rylev.github.io/DMG-01/public/book/memory_map.html" tabindex="0"><strong aria-hidden="true">5.</strong> Memory Map</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/index.html" tabindex="0"><strong aria-hidden="true">6.</strong> Appendix</a></li><li><ol class="section"><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/numbers.html" tabindex="0"><strong aria-hidden="true">6.1.</strong> Numbers</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/number_notations.html" tabindex="0"><strong aria-hidden="true">6.2.</strong> Number Notations</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/bit_manipulation.html" tabindex="0"><strong aria-hidden="true">6.3.</strong> Bit Manipulation</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/resources.html" tabindex="0"><strong aria-hidden="true">6.4.</strong> Resources</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/instruction_guide/index.html" tabindex="0"><strong aria-hidden="true">6.5.</strong> Instruction Guide</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/cartridge_header.html" tabindex="0"><strong aria-hidden="true">6.6.</strong> Cartridge Header</a></li></ol></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar bordered">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar" aria-expanded="true">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">DMG-01: How to Emulate a Game Boy</h1> 
+
+                        <div class="right-buttons">
+                            <a href="https://rylev.github.io/DMG-01/public/book/print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/executing_instructions.html#program-counter" id="program-counter"><h1>Program Counter</h1></a>
+<p>So far we've seen instructions that can operate on register data. But how does the CPU which instruction to execute? To understand this, we'll first need to understand where our instructions are stored.</p>
+<a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/executing_instructions.html#game-rom" id="game-rom"><h2>Game ROM</h2></a>
+<p>So far we know that the Game Boy has a CPU that executes instructions and it has memory. Memory can be thought of as one very large array of 8-bit numbers.</p>
+<p>At the beginning of this very long array are 255 bytes (from index 0x0000 to index 0x00FF) that are hard coded into the Game Boy's circuitry. These 255 bytes are instructions that tell the Game Boy how to "bootstrap" itself (i.e. get itself ready to execute a game) as well as display the <a href="https://www.youtube.com/watch?v=ClJWTR_lCL4">iconic splash screen</a>. Later in the book we'll be looking at specifically what these instructions do, but for now just imagine them as a collection of instructions many of which we learned in the previous chapter and the rest of which we'll learn in this chapter and the next few to come.</p>
+<p>When the user of a Game Boy inserts a game cartridge, the contents of that cartridge become available to the CPU right after these 255 bytes. We'll talk later about where other things such as the contents of the screen and graphics data live in memory later in the book. For now we just need to know that the contents of memory starting at index 0x100 until index 0x3FFF include the contents of the cartridge.</p>
+<p>So our memory is simply an long array of 8-bit numbers (0xFFFF or 65,536 of them to be exact). Each of these numbers can be decoded as an instruction that our CPU knows how to run. But how does the CPU know which of these to execute?</p>
+<a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/executing_instructions.html#the-program-counter" id="the-program-counter"><h2>The Program Counter</h2></a>
+<p>Along with the register data, our CPU also holds on to a 16-bit number called the progam counter (often abbreviated as PC) which tells us which instruction the Game Boy is currently executing. This 16-bit number is capable of addressing of the of 0xFFFF numbers that live in memory. In fact, when we talk about the memory array we don't usually use the term "index", but instead the term "address".</p>
+<p>Let's add a program counter to our CPU as well as memory that we can address from the CPU.</p>
+<pre style="position: relative;"><pre class="playpen" style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplayground hljs"><span class="hidden">
+<span class="hljs-meta">#![allow(unused_variables)]</span></span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Registers</span></span> {}</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">CPU</span></span> {
+  registers: Registers,
+  pc: <span class="hljs-built_in">u16</span>,
+  bus: MemoryBus,
+}
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">MemoryBus</span></span> {
+  memory: [<span class="hljs-built_in">u8</span>; <span class="hljs-number">0xFFFF</span>]
+}
+
+<span class="hljs-keyword">impl</span> MemoryBus {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">read_byte</span></span>(&amp;<span class="hljs-keyword">self</span>, address: <span class="hljs-built_in">u16</span>) -&gt; <span class="hljs-built_in">u8</span> {
+    <span class="hljs-keyword">self</span>.memory[address <span class="hljs-keyword">as</span> <span class="hljs-built_in">usize</span>]
+  }
+}<span class="hidden">
+}</span></code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>We now have a program counter that can tell us at which address in memory the currently executing instruction is. We won't talk much more about the contents of memory or where certain things in memory live until later in the book. For now, you should just picture memory as a large array that we can read from.</p>
+<p>Now we'll need to actually add the method to the CPU that uses the program counter to read the instruction from memory and execute it.</p>
+<p>The full set of steps is as follows:</p>
+<ul>
+<li>Use the program counter to read the instruction byte from memory.</li>
+<li>Translate the byte to one of the instances of the <code class="hljs">Instruction</code> enum</li>
+<li>If we can successfully translate the instruction call our <code class="hljs">execute</code> method else panic which now returns the next program counter</li>
+<li>Set this next program counter on our CPU</li>
+</ul>
+<pre style="position: relative;"><pre class="playpen" style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplayground hljs"><span class="hidden">
+<span class="hljs-meta">#![allow(unused_variables)]</span></span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Instruction</span></span> { }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">CPU</span></span> { pc: <span class="hljs-built_in">u16</span>, bus: Bus }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Bus</span></span> {}</span><span class="hidden">
+<span class="hljs-keyword">impl</span> Bus {</span><span class="hidden">
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">read_byte</span></span>(&amp;<span class="hljs-keyword">self</span>, a: <span class="hljs-built_in">u16</span>) -&gt; <span class="hljs-built_in">u8</span> { <span class="hljs-number">0</span> }</span><span class="hidden">
+}</span><span class="hidden">
+<span class="hljs-keyword">impl</span> CPU {</span><span class="hidden">
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">execute</span></span>(&amp;<span class="hljs-keyword">self</span>, i: Instruction) -&gt; <span class="hljs-built_in">u16</span> { <span class="hljs-number">0</span> }</span><span class="hidden">
+}</span><span class="hidden">
+<span class="hljs-keyword">impl</span> Instruction {</span><span class="hidden">
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">from_byte</span></span>(b: <span class="hljs-built_in">u8</span>) -&gt; <span class="hljs-built_in">Option</span>&lt;Instruction&gt; { <span class="hljs-literal">None</span> }</span><span class="hidden">
+}</span>
+<span class="hljs-keyword">impl</span> CPU {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">step</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> instruction_byte = <span class="hljs-keyword">self</span>.bus.read_byte(<span class="hljs-keyword">self</span>.pc);
+
+    <span class="hljs-keyword">let</span> next_pc = <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> <span class="hljs-literal">Some</span>(instruction) = Instruction::from_byte(instruction_byte) {
+      <span class="hljs-keyword">self</span>.execute(instruction)
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"Unkown instruction found for: 0x{:x}"</span>, instruction_byte);
+    };
+
+    <span class="hljs-keyword">self</span>.pc = next_pc;
+  }
+}<span class="hidden">
+}</span></code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>So there's two things we'll need to add for the above to work. We'll need to change our execute method to return the next program counter, and we'll need to add a function that takes a byte and returns an <code class="hljs">Instruction</code>. Let's start with latter. Decoding our instruction byte as an <code class="hljs">Instruction</code> is very straight forward. Instructions are uniquely identified by the byte number. For instance, a logical <code class="hljs">OR</code> with the <code class="hljs">A</code> register as its target is identified by the byte 0x87. Want to do an <code class="hljs">OR</code> with the <code class="hljs">H</code> register as the target? That's the number 0xB4. The <code class="hljs">SCF</code> (or Set Carry Flag) instruction is identified by the byte 0x37. We can use our <a href="https://rylev.github.io/DMG-01/public/book/appendix/instruction_guide/index.html">instruction guide</a> to find out which byte value corresponds to which <code class="hljs">Instruction</code>.</p>
+<pre style="position: relative;"><pre class="playpen" style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplayground hljs"><span class="hidden">
+<span class="hljs-meta">#![allow(unused_variables)]</span></span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">IncDecTarget</span></span> { BC, DE }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Instruction</span></span> { INC(IncDecTarget) }</span>
+<span class="hljs-keyword">impl</span> Instruction {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">from_byte</span></span>(byte: <span class="hljs-built_in">u8</span>) -&gt; <span class="hljs-built_in">Option</span>&lt;Instruction&gt; {
+    <span class="hljs-keyword">match</span> byte {
+      <span class="hljs-number">0x02</span> =&gt; <span class="hljs-literal">Some</span>(Instruction::INC(IncDecTarget::BC)),
+      <span class="hljs-number">0x13</span> =&gt; <span class="hljs-literal">Some</span>(Instruction::INC(IncDecTarget::DE)),
+      _ =&gt; <span class="hljs-comment">/* <span class="hljs-doctag">TODO:</span> Add mapping for rest of instructions */</span> <span class="hljs-literal">None</span>
+    }
+  }
+}<span class="hidden">
+}</span></code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>And now let's change our <code class="hljs">execute</code> method so that it now returns the next program counter:</p>
+<pre style="position: relative;"><pre class="playpen" style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplayground hljs"><span class="hidden">
+<span class="hljs-meta">#![allow(unused_variables)]</span></span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Registers</span></span> { a:<span class="hljs-built_in">u8</span>, c: <span class="hljs-built_in">u8</span> }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">CPU</span></span> { pc: <span class="hljs-built_in">u16</span>, registers: Registers }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Instruction</span></span> { ADD(ArithmeticTarget), }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">ArithmeticTarget</span></span> { A, B, C, D, E, H, L, }</span>
+<span class="hljs-keyword">impl</span> CPU {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">execute</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, instruction: Instruction) -&gt; <span class="hljs-built_in">u16</span> {
+    <span class="hljs-keyword">match</span> instruction {
+      Instruction::ADD(target) =&gt; {
+        <span class="hljs-keyword">match</span> target {
+          ArithmeticTarget::C =&gt; {
+            <span class="hljs-keyword">let</span> value = <span class="hljs-keyword">self</span>.registers.c;
+            <span class="hljs-keyword">let</span> new_value = <span class="hljs-keyword">self</span>.add(value);
+            <span class="hljs-keyword">self</span>.registers.a = new_value;
+            <span class="hljs-keyword">self</span>.pc.wrapping_add(<span class="hljs-number">1</span>)
+          }
+          _ =&gt; { <span class="hljs-comment">/* <span class="hljs-doctag">TODO:</span> support more targets */</span> <span class="hljs-keyword">self</span>.pc }
+        }
+      }
+      _ =&gt; { <span class="hljs-comment">/* <span class="hljs-doctag">TODO:</span> support more instructions */</span> <span class="hljs-keyword">self</span>.pc }
+    }
+  }<span class="hidden">
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">add</span></span>(&amp;<span class="hljs-keyword">self</span>, value: <span class="hljs-built_in">u8</span>) -&gt; <span class="hljs-built_in">u8</span> {</span><span class="hidden">
+    <span class="hljs-number">0</span></span><span class="hidden">
+  }</span>
+}<span class="hidden">
+}</span></code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>Now we have the ability to read the instruction byte from memory that's pointed to by our program counter, decode that instruction byte as one of the variants of our <code class="hljs">Instruction</code> enum, execute that instruction and get back the new program counter and finally set the new program counter on our CPU. This is how all instructions in the Game Boy get executed! Well, except...</p>
+<a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/executing_instructions.html#prefix-instructions" id="prefix-instructions"><h2>Prefix Instructions</h2></a>
+<p>The process we've laid out for how instructions get executed is true for roughly half of the total instructions the Game Boy can perform. The other half of instructions work the same way except that instead of being identified by a single byte they're first indentified by a prefix byte. This prefix byte tells the CPU, "Hey! The next instruction byte you read shouldn't be interpreted as a normal instruction, but rather as a prefix instruction".</p>
+<p>This prefix byte is the number "0xCB". So, we'll need to add logic that first checks to see if the byte we read from memory is 0xCB. If it is, we then need to read one more byte and interpret this byte as an "prefix instruction". For example, if we read 0xCB from memory, we know that we're going to be decoding a prefix instruction. We then read another byte. If that byte is, say, 0xB4, we should <em>not</em> interpret this as <code class="hljs">OR</code> with <code class="hljs">H</code> as the target like we normally would but rather as a <code class="hljs">RES</code> instruction with the 6th bit of the <code class="hljs">H</code> register as the target. Again we can use the <a href="https://rylev.github.io/DMG-01/public/book/appendix/instruction_guide/index.html">instruction guide</a> to help us know what a given byte should decode as.</p>
+<p>Let's put it in code!</p>
+<pre style="position: relative;"><pre class="playpen" style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplayground hljs"><span class="hidden">
+<span class="hljs-meta">#![allow(unused_variables)]</span></span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">IncDecTarget</span></span> { BC }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">PrefixTarget</span></span> { B }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Instruction</span></span> { INC(IncDecTarget), RLC(PrefixTarget) }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">CPU</span></span> { pc: <span class="hljs-built_in">u16</span>, bus: Bus }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Bus</span></span> {}</span><span class="hidden">
+<span class="hljs-keyword">impl</span> Bus { <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">read_byte</span></span>(&amp;<span class="hljs-keyword">self</span>, a: <span class="hljs-built_in">u16</span>) -&gt; <span class="hljs-built_in">u8</span> { <span class="hljs-number">0</span> } }</span><span class="hidden">
+<span class="hljs-keyword">impl</span> CPU { <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">execute</span></span>(&amp;<span class="hljs-keyword">self</span>, i: Instruction) -&gt; <span class="hljs-built_in">u16</span> { <span class="hljs-number">0</span> } }</span>
+<span class="hljs-keyword">impl</span> CPU {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">step</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> instruction_byte = <span class="hljs-keyword">self</span>.bus.read_byte(<span class="hljs-keyword">self</span>.pc);
+    <span class="hljs-keyword">let</span> prefixed = instruction_byte == <span class="hljs-number">0xCB</span>;
+    <span class="hljs-keyword">if</span> prefixed {
+      instruction_byte = <span class="hljs-keyword">self</span>.bus.read_byte(<span class="hljs-keyword">self</span>.pc + <span class="hljs-number">1</span>);
+    }
+
+    <span class="hljs-keyword">let</span> next_pc = <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> <span class="hljs-literal">Some</span>(instruction) = Instruction::from_byte(instruction_byte, prefixed) {
+      <span class="hljs-keyword">self</span>.execute(instruction)
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">let</span> description = <span class="hljs-built_in">format!</span>(<span class="hljs-string">"0x{}{:x}"</span>, <span class="hljs-keyword">if</span> prefixed { <span class="hljs-string">"cb"</span> } <span class="hljs-keyword">else</span> { <span class="hljs-string">""</span> }, instruction_byte);
+      <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"Unkown instruction found for: {}"</span>, description)
+    };
+
+    <span class="hljs-keyword">self</span>.pc = next_pc;
+  }
+}
+
+<span class="hljs-keyword">impl</span> Instruction {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">from_byte</span></span>(byte: <span class="hljs-built_in">u8</span>, prefixed: <span class="hljs-built_in">bool</span>) -&gt; <span class="hljs-built_in">Option</span>&lt;Instruction&gt; {
+    <span class="hljs-keyword">if</span> prefixed {
+      Instruction::from_byte_prefixed(byte)
+    } <span class="hljs-keyword">else</span> {
+      Instruction::from_byte_not_prefixed(byte)
+    }
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">from_byte_prefixed</span></span>(byte: <span class="hljs-built_in">u8</span>) -&gt; <span class="hljs-built_in">Option</span>&lt;Instruction&gt; {
+    <span class="hljs-keyword">match</span> byte {
+      <span class="hljs-number">0x00</span> =&gt; <span class="hljs-literal">Some</span>(Instruction::RLC(PrefixTarget::B)),
+      _ =&gt; <span class="hljs-comment">/* <span class="hljs-doctag">TODO:</span> Add mapping for rest of instructions */</span> <span class="hljs-literal">None</span>
+    }
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">from_byte_not_prefixed</span></span>(byte: <span class="hljs-built_in">u8</span>) -&gt; <span class="hljs-built_in">Option</span>&lt;Instruction&gt; {
+    <span class="hljs-keyword">match</span> byte {
+      <span class="hljs-number">0x02</span> =&gt; <span class="hljs-literal">Some</span>(Instruction::INC(IncDecTarget::BC)),
+      _ =&gt; <span class="hljs-comment">/* <span class="hljs-doctag">TODO:</span> Add mapping for rest of instructions */</span> <span class="hljs-literal">None</span>
+    }
+  }
+}<span class="hidden">
+}</span></code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>The amount the program counter goes forward after each step of execution is determined by how "wide" the instruction - i.e. how many bytes it takes to describe the instruction in its entirety. For simple instructions, this is one byte - the byte the uniquely identifies the instruction. So far all the instructions we've seen either are 1 or 2 bytes wide (prefix instructions are two bytes - the prefix and the instruction identifier - while the other instructions are only one 1 byte - just for indentifier). In the future we'll see other instructions which have "operands" or data the instruction needs to execute. These instructions can sometimes be even 3 bytes wide.</p>
+<p>However, the program counter doesn't have to go forward by a set amount. In fact, there are instructions that manipulate the program counter in arbitrary ways sometimes sending the program counter to somewhere far away from its previous location.</p>
+<a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/executing_instructions.html#jump-instructions" id="jump-instructions"><h2>Jump Instructions</h2></a>
+<p>The real power of computers are their ability to "make decisions" - i.e., do one thing given one condition and do another thing given another condition. At the hardware level this is usually implemented with "jumps" or the ability to change where in our program we are (as indicated by the program counter) based on certain conditions. In the case of the Game Boy's CPU these conditions are specificed by the flags register. For example, there is an instruction that says to "jump" (i.e., set the program counter) to a certain location if the flags register's zero flag is true. This gives the game a way to perform certain instructions and then change to different parts of the game code if the result of the instruction resulted in setting particular flags. Let's list out the types of jumps there:</p>
+<ul>
+<li>JP: Jump to a particular address dependent on one of the following conditions: the zero flag is true, the zero flag is flase, the carry flag is true, the carry flag is false, or always jump.</li>
+<li>JR: Jump a certain amount relative to the current program counter dependent on the same conditions above.</li>
+<li>JPI: Jump to the address stored in HI</li>
+</ul>
+<p>You can find the specifics of how these jump instructions work in the <a href="https://rylev.github.io/DMG-01/public/book/appendix/instruction_guide/index.html">instruction guide</a>.</p>
+<p>Implementation of jump is pretty trivial:</p>
+<pre style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplaypen hljs"><span class="hidden"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">FlagsRegister</span></span> { zero: <span class="hljs-built_in">bool</span>, carry: <span class="hljs-built_in">bool</span> }
+</span><span class="hidden"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Registers</span></span> { f: FlagsRegister }
+</span><span class="hidden"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">CPU</span></span> { registers: Registers, bus: Bus, pc: <span class="hljs-built_in">u16</span> }
+</span><span class="hidden"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Bus</span></span> {}
+</span><span class="hidden"><span class="hljs-keyword">impl</span> Bus { <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">read_byte</span></span>(&amp;<span class="hljs-keyword">self</span>, addr: <span class="hljs-built_in">u16</span>) -&gt; <span class="hljs-built_in">u8</span> { <span class="hljs-number">0</span> } }
+</span><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">JumpTest</span></span> {
+  NotZero,
+  Zero,
+  NotCarry,
+  Carry,
+  Always
+}
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Instruction</span></span> {
+  JP(JumpTest),
+}
+
+<span class="hljs-keyword">impl</span> CPU {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">execute</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, instruction: Instruction) -&gt; <span class="hljs-built_in">u16</span> {
+    <span class="hljs-keyword">match</span> instruction {
+      Instruction::JP(test) =&gt; {
+        <span class="hljs-keyword">let</span> jump_condition = <span class="hljs-keyword">match</span> test {
+            JumpTest::NotZero =&gt; !<span class="hljs-keyword">self</span>.registers.f.zero,
+            JumpTest::NotCarry =&gt; !<span class="hljs-keyword">self</span>.registers.f.carry,
+            JumpTest::Zero =&gt; <span class="hljs-keyword">self</span>.registers.f.zero,
+            JumpTest::Carry =&gt; <span class="hljs-keyword">self</span>.registers.f.carry,
+            JumpTest::Always =&gt; <span class="hljs-literal">true</span>
+        };
+        <span class="hljs-keyword">self</span>.jump(jump_condition)
+      }
+      _ =&gt; { <span class="hljs-comment">/* <span class="hljs-doctag">TODO:</span> support more instructions */</span> <span class="hljs-keyword">self</span>.pc }
+    }
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">jump</span></span>(&amp;<span class="hljs-keyword">self</span>, should_jump: <span class="hljs-built_in">bool</span>) -&gt; <span class="hljs-built_in">u16</span> {
+    <span class="hljs-keyword">if</span> should_jump {
+      <span class="hljs-comment">// Gameboy is little endian so read pc + 2 as most significant bit</span>
+      <span class="hljs-comment">// and pc + 1 as least significant bit</span>
+      <span class="hljs-keyword">let</span> least_significant_byte = <span class="hljs-keyword">self</span>.bus.read_byte(<span class="hljs-keyword">self</span>.pc + <span class="hljs-number">1</span>) <span class="hljs-keyword">as</span> <span class="hljs-built_in">u16</span>;
+      <span class="hljs-keyword">let</span> most_significant_byte = <span class="hljs-keyword">self</span>.bus.read_byte(<span class="hljs-keyword">self</span>.pc + <span class="hljs-number">2</span>) <span class="hljs-keyword">as</span> <span class="hljs-built_in">u16</span>;
+      (most_significant_byte &lt;&lt; <span class="hljs-number">8</span>) | least_significant_byte
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-comment">// If we don't jump we need to still move the program</span>
+      <span class="hljs-comment">// counter forward by 3 since the jump instruction is</span>
+      <span class="hljs-comment">// 3 bytes wide (1 byte for tag and 2 bytes for jump address)</span>
+      <span class="hljs-keyword">self</span>.pc.wrapping_add(<span class="hljs-number">3</span>)
+    }
+  }
+}
+</code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>It's important to note that the address we jump to is located in the two bytes following the instruction identifier. As the comment in the code example explains, the Game Boy is little endian which means that when you have numbers that are larger than 1 byte, the least significant is stored first in memory and then the most significant byte.</p>
+<pre style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button></div><code class="language-ignore hljs">+-------------+-------------- +--------------+
+| Instruction | Least Signif- | Most Signif-
+| Identifier  | icant Byte    | icant Byte   |
++-------------+-------------- +--------------+
+</code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>We're now succesfully executing instructions that are stored in memory! We learned that the current executing instruction is kept track of by the program counter. We then read the instruction from memory and execute it, getting back our next program counter. With this, we were even able to add some new instructions that let the game conditionally control exactly where the next program counter will be. Next we'll look at bit closer at instructions that read and write to memory.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="https://rylev.github.io/DMG-01/public/book/cpu/register_data_instructions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="https://rylev.github.io/DMG-01/public/book/cpu/reading_and_writing_memory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="https://rylev.github.io/DMG-01/public/book/cpu/register_data_instructions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="https://rylev.github.io/DMG-01/public/book/cpu/reading_and_writing_memory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/elasticlunr.min.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/mark.min.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/searcher.js.download" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/clipboard.min.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/highlight.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./Instruction Execution and Control Flow - DMG-01_ How to Emulate a Game Boy_files/book.js.download" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    
+
+<div class="Kudos"><template shadowrootmode="open"></template><style>.Kudos{z-index:2147483647;position:fixed;box-sizing:border-box;margin:0px;padding:0px;right:0px;bottom:0px;font-size:16px;font-family:"Poppins",sans-serif;line-height:1;-webkit-font-smoothing:antialiased}.Kudos-Mobile{font-size:16px;font-family:"Poppins",sans-serif;line-height:1;-webkit-font-smoothing:antialiased}
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL2NvbnRlbnQvY29udGFpbmVyL0t1ZG9zLmxhenkuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFQSxPQUNJLGtCQUFBLENBQ0EsY0FBQSxDQUNBLHFCQUFBLENBQ0EsVUFBQSxDQUNBLFdBQUEsQ0FDQSxTQUFBLENBQ0EsVUFBQSxDQUNBLGNBQUEsQ0FDQSxnQ0FBQSxDQUNBLGFBQUEsQ0FDQSxrQ0FBQSxDQUdKLGNBQ0ksY0FBQSxDQUNBLGdDQUFBLENBQ0EsYUFBQSxDQUNBLGtDQUFBIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzMj9mYW1pbHk9SW50ZXImZmFtaWx5PVBvcHBpbnM6d2dodEA0MDA7NTAwOzYwMDs3MDAmZGlzcGxheT1zd2FwJyk7XG5cbi5LdWRvcyB7XG4gICAgei1pbmRleDogMjE0NzQ4MzY0NztcbiAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgICBtYXJnaW46IDBweDtcbiAgICBwYWRkaW5nOiAwcHg7XG4gICAgcmlnaHQ6IDBweDtcbiAgICBib3R0b206IDBweDtcbiAgICBmb250LXNpemU6IDE2cHg7XG4gICAgZm9udC1mYW1pbHk6ICdQb3BwaW5zJywgc2Fucy1zZXJpZjtcbiAgICBsaW5lLWhlaWdodDogMTtcbiAgICAtd2Via2l0LWZvbnQtc21vb3RoaW5nOiBhbnRpYWxpYXNlZDtcbn1cblxuLkt1ZG9zLU1vYmlsZSB7XG4gICAgZm9udC1zaXplOiAxNnB4O1xuICAgIGZvbnQtZmFtaWx5OiAnUG9wcGlucycsIHNhbnMtc2VyaWY7XG4gICAgbGluZS1oZWlnaHQ6IDE7XG4gICAgLXdlYmtpdC1mb250LXNtb290aGluZzogYW50aWFsaWFzZWQ7XG59XG5cbkBpbXBvcnQgdXJsKCdodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2NzczI/ZmFtaWx5PUludGVyJmZhbWlseT1Qb3BwaW5zOndnaHRANDAwOzUwMDs2MDA7NzAwJmRpc3BsYXk9c3dhcCcpO1xuIl0sInNvdXJjZVJvb3QiOiIifQ== */</style><style>@import url(https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600;700&display=swap);</style><style>@import url(https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600;700&display=swap);</style></div></body></html>

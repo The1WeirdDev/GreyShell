@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<!-- saved from url=(0078)https://rylev.github.io/DMG-01/public/book/cpu/reading_and_writing_memory.html -->
+<html lang="en" class="js sidebar-visible light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Book generated using mdBook -->
+        
+        <title>Instructions for Reading and Writting to Memory - DMG-01: How to Emulate a Game Boy</title>
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="rgba(0, 0, 0, 0)">
+
+        <link rel="shortcut icon" href="https://rylev.github.io/DMG-01/public/book/favicon.png">
+        <link rel="stylesheet" href="./WritingToMemory_files/variables.css">
+        <link rel="stylesheet" href="./WritingToMemory_files/general.css">
+        <link rel="stylesheet" href="./WritingToMemory_files/chrome.css">
+        <link rel="stylesheet" href="./WritingToMemory_files/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="./WritingToMemory_files/font-awesome.css">
+        <link href="./WritingToMemory_files/css" rel="stylesheet" type="text/css">
+        <link href="./WritingToMemory_files/css(1)" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="./WritingToMemory_files/highlight.css">
+        <link rel="stylesheet" href="./WritingToMemory_files/tomorrow-night.css" disabled="">
+        <link rel="stylesheet" href="./WritingToMemory_files/ayu-highlight.css" disabled="">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    <style>@keyframes react-loading-skeleton {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.react-loading-skeleton {
+  --base-color: #ebebeb;
+  --highlight-color: #f5f5f5;
+  --animation-duration: 1.5s;
+  --animation-direction: normal;
+  --pseudo-element-display: block; /* Enable animation */
+
+  background-color: var(--base-color);
+
+  width: 100%;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  line-height: 1;
+
+  position: relative;
+  user-select: none;
+  overflow: hidden;
+  z-index: 1; /* Necessary for overflow: hidden to work correctly in Safari */
+}
+
+.react-loading-skeleton::after {
+  content: ' ';
+  display: var(--pseudo-element-display);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(
+    90deg,
+    var(--base-color),
+    var(--highlight-color),
+    var(--base-color)
+  );
+  transform: translateX(-100%);
+
+  animation-name: react-loading-skeleton;
+  animation-direction: var(--animation-direction);
+  animation-duration: var(--animation-duration);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion) {
+  .react-loading-skeleton {
+    --pseudo-element-display: none; /* Disable animation */
+  }
+}
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy9yZWFjdC1sb2FkaW5nLXNrZWxldG9uL2Rpc3Qvc2tlbGV0b24uY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7SUFDRSwyQkFBMkI7RUFDN0I7QUFDRjs7QUFFQTtFQUNFLHFCQUFxQjtFQUNyQiwwQkFBMEI7RUFDMUIsMEJBQTBCO0VBQzFCLDZCQUE2QjtFQUM3QiwrQkFBK0IsRUFBRSxxQkFBcUI7O0VBRXRELG1DQUFtQzs7RUFFbkMsV0FBVztFQUNYLHNCQUFzQjtFQUN0QixvQkFBb0I7RUFDcEIsY0FBYzs7RUFFZCxrQkFBa0I7RUFDbEIsaUJBQWlCO0VBQ2pCLGdCQUFnQjtFQUNoQixVQUFVLEVBQUUsK0RBQStEO0FBQzdFOztBQUVBO0VBQ0UsWUFBWTtFQUNaLHNDQUFzQztFQUN0QyxrQkFBa0I7RUFDbEIsTUFBTTtFQUNOLE9BQU87RUFDUCxRQUFRO0VBQ1IsWUFBWTtFQUNaLDRCQUE0QjtFQUM1Qjs7Ozs7R0FLQztFQUNELDRCQUE0Qjs7RUFFNUIsc0NBQXNDO0VBQ3RDLCtDQUErQztFQUMvQyw2Q0FBNkM7RUFDN0Msc0NBQXNDO0VBQ3RDLG1DQUFtQztBQUNyQzs7QUFFQTtFQUNFO0lBQ0UsOEJBQThCLEVBQUUsc0JBQXNCO0VBQ3hEO0FBQ0YiLCJzb3VyY2VzQ29udGVudCI6WyJAa2V5ZnJhbWVzIHJlYWN0LWxvYWRpbmctc2tlbGV0b24ge1xuICAxMDAlIHtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVgoMTAwJSk7XG4gIH1cbn1cblxuLnJlYWN0LWxvYWRpbmctc2tlbGV0b24ge1xuICAtLWJhc2UtY29sb3I6ICNlYmViZWI7XG4gIC0taGlnaGxpZ2h0LWNvbG9yOiAjZjVmNWY1O1xuICAtLWFuaW1hdGlvbi1kdXJhdGlvbjogMS41cztcbiAgLS1hbmltYXRpb24tZGlyZWN0aW9uOiBub3JtYWw7XG4gIC0tcHNldWRvLWVsZW1lbnQtZGlzcGxheTogYmxvY2s7IC8qIEVuYWJsZSBhbmltYXRpb24gKi9cblxuICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1iYXNlLWNvbG9yKTtcblxuICB3aWR0aDogMTAwJTtcbiAgYm9yZGVyLXJhZGl1czogMC4yNXJlbTtcbiAgZGlzcGxheTogaW5saW5lLWZsZXg7XG4gIGxpbmUtaGVpZ2h0OiAxO1xuXG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgdXNlci1zZWxlY3Q6IG5vbmU7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIHotaW5kZXg6IDE7IC8qIE5lY2Vzc2FyeSBmb3Igb3ZlcmZsb3c6IGhpZGRlbiB0byB3b3JrIGNvcnJlY3RseSBpbiBTYWZhcmkgKi9cbn1cblxuLnJlYWN0LWxvYWRpbmctc2tlbGV0b246OmFmdGVyIHtcbiAgY29udGVudDogJyAnO1xuICBkaXNwbGF5OiB2YXIoLS1wc2V1ZG8tZWxlbWVudC1kaXNwbGF5KTtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICB0b3A6IDA7XG4gIGxlZnQ6IDA7XG4gIHJpZ2h0OiAwO1xuICBoZWlnaHQ6IDEwMCU7XG4gIGJhY2tncm91bmQtcmVwZWF0OiBuby1yZXBlYXQ7XG4gIGJhY2tncm91bmQtaW1hZ2U6IGxpbmVhci1ncmFkaWVudChcbiAgICA5MGRlZyxcbiAgICB2YXIoLS1iYXNlLWNvbG9yKSxcbiAgICB2YXIoLS1oaWdobGlnaHQtY29sb3IpLFxuICAgIHZhcigtLWJhc2UtY29sb3IpXG4gICk7XG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWCgtMTAwJSk7XG5cbiAgYW5pbWF0aW9uLW5hbWU6IHJlYWN0LWxvYWRpbmctc2tlbGV0b247XG4gIGFuaW1hdGlvbi1kaXJlY3Rpb246IHZhcigtLWFuaW1hdGlvbi1kaXJlY3Rpb24pO1xuICBhbmltYXRpb24tZHVyYXRpb246IHZhcigtLWFuaW1hdGlvbi1kdXJhdGlvbik7XG4gIGFuaW1hdGlvbi10aW1pbmctZnVuY3Rpb246IGVhc2UtaW4tb3V0O1xuICBhbmltYXRpb24taXRlcmF0aW9uLWNvdW50OiBpbmZpbml0ZTtcbn1cblxuQG1lZGlhIChwcmVmZXJzLXJlZHVjZWQtbW90aW9uKSB7XG4gIC5yZWFjdC1sb2FkaW5nLXNrZWxldG9uIHtcbiAgICAtLXBzZXVkby1lbGVtZW50LWRpc3BsYXk6IG5vbmU7IC8qIERpc2FibGUgYW5pbWF0aW9uICovXG4gIH1cbn1cbiJdLCJzb3VyY2VSb290IjoiIn0= */</style></head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">var path_to_root = "../";</script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents" aria-hidden="false">
+            <ol class="chapter"><li><a href="https://rylev.github.io/DMG-01/public/book/introduction.html" tabindex="0"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/architecture_overview.html" tabindex="0"><strong aria-hidden="true">2.</strong> Architecture Overview</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/introduction.html" tabindex="0"><strong aria-hidden="true">3.</strong> CPU</a></li><li><ol class="section"><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/registers.html" tabindex="0"><strong aria-hidden="true">3.1.</strong> CPU Registers</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/register_data_instructions.html" tabindex="0"><strong aria-hidden="true">3.2.</strong> Instructions on Register Data</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/executing_instructions.html" tabindex="0"><strong aria-hidden="true">3.3.</strong> Instruction Execution and Control Flow</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/reading_and_writing_memory.html" class="active" tabindex="0"><strong aria-hidden="true">3.4.</strong> Instructions for Reading and Writting to Memory</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/conclusion.html" tabindex="0"><strong aria-hidden="true">3.5.</strong> Finishing Up the CPU</a></li></ol></li><li><a href="https://rylev.github.io/DMG-01/public/book/graphics/introduction.html" tabindex="0"><strong aria-hidden="true">4.</strong> Graphics</a></li><li><ol class="section"><li><a href="https://rylev.github.io/DMG-01/public/book/graphics/tile_ram.html" tabindex="0"><strong aria-hidden="true">4.1.</strong> Tile RAM</a></li></ol></li><li><a href="https://rylev.github.io/DMG-01/public/book/memory_map.html" tabindex="0"><strong aria-hidden="true">5.</strong> Memory Map</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/index.html" tabindex="0"><strong aria-hidden="true">6.</strong> Appendix</a></li><li><ol class="section"><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/numbers.html" tabindex="0"><strong aria-hidden="true">6.1.</strong> Numbers</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/number_notations.html" tabindex="0"><strong aria-hidden="true">6.2.</strong> Number Notations</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/bit_manipulation.html" tabindex="0"><strong aria-hidden="true">6.3.</strong> Bit Manipulation</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/resources.html" tabindex="0"><strong aria-hidden="true">6.4.</strong> Resources</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/instruction_guide/index.html" tabindex="0"><strong aria-hidden="true">6.5.</strong> Instruction Guide</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/cartridge_header.html" tabindex="0"><strong aria-hidden="true">6.6.</strong> Cartridge Header</a></li></ol></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar bordered folded">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar" aria-expanded="true">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">DMG-01: How to Emulate a Game Boy</h1> 
+
+                        <div class="right-buttons">
+                            <a href="https://rylev.github.io/DMG-01/public/book/print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/reading_and_writing_memory.html#instructions-for-reading-and-writting-to-memory" id="instructions-for-reading-and-writting-to-memory"><h1>Instructions for Reading and Writting to Memory</h1></a>
+<p>Now that we've seen how instructions get executed and the very basics of reading from memory in order to fetch the instructions to be read, we'll look now at instructions that are used to read and write from different parts of memory.</p>
+<a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/reading_and_writing_memory.html#loading-memory" id="loading-memory"><h2>Loading Memory</h2></a>
+<p>First, when we talk about reading and writing memory, we usually use the term "load". We'll be loading data from some place to some place - for example, loading the contents of register A into memory at location 0xFF0A or loading register C with the contents from memory location 0x0040. Loading doesn't have to be between a register and a place in memory, it can also be between two registers or even two places in memory.</p>
+<p>All of the instructions we'll be looking are called <code class="hljs">LD</code> instructions. We'll be differentiating between the types of loads with the <code class="hljs">LoadType</code> enum. The enum will describe what kind of load we're doing.</p>
+<p>Let's take a look at the implementation of the <code class="hljs">LD</code> instruction with the <code class="hljs">LoadType</code> of <code class="hljs">Byte</code> which loads a byte from one place to another.</p>
+<pre style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplaypen hljs"><span class="hidden"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Bus</span></span> {}
+</span><span class="hidden"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Registers</span></span> { a: <span class="hljs-built_in">u8</span> }
+</span><span class="hidden"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">CPU</span></span> { registers: Registers, bus: Bus, pc: <span class="hljs-built_in">u16</span> }
+</span><span class="hidden"><span class="hljs-keyword">impl</span> Registers { <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">get_hl</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">u16</span> { <span class="hljs-number">0</span> } }
+</span><span class="hidden"><span class="hljs-keyword">impl</span> CPU { <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">read_next_byte</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">u8</span> { <span class="hljs-number">0</span> } }
+</span><span class="hidden"><span class="hljs-keyword">impl</span> Bus { <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">read_byte</span></span>(&amp;<span class="hljs-keyword">self</span>, addr: <span class="hljs-built_in">u16</span>) -&gt; <span class="hljs-built_in">u8</span> { <span class="hljs-number">0</span> }
+</span>             <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">write_byte</span></span>(&amp;<span class="hljs-keyword">self</span>, addr: <span class="hljs-built_in">u16</span>, byte: <span class="hljs-built_in">u8</span>) {} }
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">LoadByteTarget</span></span> {
+    A, B, C, D, E, H, L, HLI
+}
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">LoadByteSource</span></span> {
+    A, B, C, D, E, H, L, D8, HLI
+}
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">LoadType</span></span> {
+  Byte(LoadByteTarget, LoadByteSource),
+}
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Instruction</span></span> {
+  LD(LoadType),
+}
+
+<span class="hljs-keyword">impl</span> CPU {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">execute</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, instruction: Instruction) -&gt; <span class="hljs-built_in">u16</span> {
+    <span class="hljs-keyword">match</span> instruction {
+      Instruction::LD(load_type) =&gt; {
+        <span class="hljs-keyword">match</span> load_type {
+          LoadType::Byte(target, source) =&gt; {
+            <span class="hljs-keyword">let</span> source_value = <span class="hljs-keyword">match</span> source {
+              LoadByteSource::A =&gt; <span class="hljs-keyword">self</span>.registers.a,
+              LoadByteSource::D8 =&gt; <span class="hljs-keyword">self</span>.read_next_byte(),
+              LoadByteSource::HLI =&gt; <span class="hljs-keyword">self</span>.bus.read_byte(<span class="hljs-keyword">self</span>.registers.get_hl()),
+              _ =&gt; { <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"TODO: implement other sources"</span>) }
+            };
+            <span class="hljs-keyword">match</span> target {
+              LoadByteTarget::A =&gt; <span class="hljs-keyword">self</span>.registers.a = source_value,
+              LoadByteTarget::HLI =&gt; <span class="hljs-keyword">self</span>.bus.write_byte(<span class="hljs-keyword">self</span>.registers.get_hl(), source_value),
+              _ =&gt; { <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"TODO: implement other targets"</span>) }
+            };
+            <span class="hljs-keyword">match</span> source {
+              LoadByteSource::D8  =&gt; <span class="hljs-keyword">self</span>.pc.wrapping_add(<span class="hljs-number">2</span>),
+              _                   =&gt; <span class="hljs-keyword">self</span>.pc.wrapping_add(<span class="hljs-number">1</span>),
+            }
+          }
+          _ =&gt; { <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"TODO: implement other load types"</span>) }
+        }
+      }
+      _ =&gt; { <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"TODO: support more instructions"</span>) }
+    }
+  }
+}
+</code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>For loads with a register as a source, we simply read the register's value. If the source is a <code class="hljs">D8</code> (meaning "direct 8 bit value"), the value is stored directly after the instruction, so we can simply call <code class="hljs">read_next_byte</code> which reads the byte directly after the byte the program counter is currently pointing to. Lastly, if the source is <code class="hljs">HLI</code> we use the value inside of the <code class="hljs">HL</code> register as an address from which we read an 8 bit value from memory.</p>
+<p>The target is merely the reverse of the source (except that we can't have <code class="hljs">D8</code> as a target). If the target is a register, we write the source value into that register, and if the target is <code class="hljs">HLI</code> we write to the address that is stored inside of the <code class="hljs">HL</code> register.</p>
+<p>The use of the 16-bit registers <code class="hljs">BC</code>, <code class="hljs">DE</code>, and <code class="hljs">HL</code> to store addresses is very common.</p>
+<p>Let's take a look at the other types of loads that there are:</p>
+<ul>
+<li><code class="hljs">Word</code>: just like the <code class="hljs">Byte</code> type except with 16-bit values</li>
+<li><code class="hljs">AFromIndirect</code>: load the A register with the contents from a value from a memory location whose address is stored in some location</li>
+<li><code class="hljs">IndirectFromA</code>: load a memory location whose address is stored in some location with the contents of the A register</li>
+<li><code class="hljs">AFromByteAddress</code>: Just like <code class="hljs">AFromIndirect</code> except the memory address is some address in the very last byte of memory.</li>
+<li><code class="hljs">ByteAddressFromA</code>: Just like <code class="hljs">IndirectFromA</code> except the memory address is some address in the very last byte of memory.</li>
+</ul>
+<p>For more detail on these instructions checkout the <a href="https://rylev.github.io/DMG-01/public/book/appendix/instruction_guide/index.html">instruction guide</a>.</p>
+<p>These instructions have been for writing and writing to anywhere in memory, but there are a set of instructions that deal with a specific piece of memory called the stack. Let's take a look at what the stack is and the instructions that are used to manipulate the stack.</p>
+<a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/reading_and_writing_memory.html#the-stack" id="the-stack"><h2>The Stack</h2></a>
+<p>Before we can look at the piece of memory in the Game Boy known as the stack, we need to have a good understanding of what a stack is more generally. A stack is a simple data structure that allows you to add values to it (a.k.a "push" values) and then get these values back (a.k.a pop them off the stack). The key thing to remember with a stack is that you pop items off the stack in reverse order from which you pushed the items on - i.e., if you pushed three items "A", "B", "C" on to a stack in that order, the order you will get them back when poping them off is "C", "B", "A".</p>
+<p>The Game Boy CPU has built in support for a stack like data structure in memory. This stack lives somewhere in memory (we'll talk about how it's location in memory is set in just a minute), and it holds on to 16 bit values. How is it built?</p>
+<p>First, the CPU has an additional 16-bit register on it that indicates the top of the stack. This register is called <code class="hljs">SP</code> or stack pointer because it "points" to where the top of the stack is. Let's add this register to our CPU:</p>
+<pre style="position: relative;"><pre class="playpen" style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplayground hljs"><span class="hidden">
+<span class="hljs-meta">#![allow(unused_variables)]</span></span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Registers</span></span> {}</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">MemoryBus</span></span> {}</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">CPU</span></span> {
+  registers: Registers,
+  pc: <span class="hljs-built_in">u16</span>,
+  sp: <span class="hljs-built_in">u16</span>,
+  bus: MemoryBus,
+}<span class="hidden">
+}</span></code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>We have a stack pointer now so we know where our stack is, but how do we push and pop from this stack?</p>
+<p>The Game Boy's CPU understands two insructions for doing just that. <code class="hljs">PUSH</code> will write the contents of any 16-bit register into the stack and <code class="hljs">POP</code> writes the head of stack into any 16-bit register.</p>
+<p>Here's what's actually happening when a <code class="hljs">PUSH</code> is performed:</p>
+<ul>
+<li><em>Decrease</em> the stack pointer by 1.</li>
+<li>Write the most significant byte of the 16 bit value into memory at the location the stack pointer is now pointing to</li>
+<li><em>Decrease</em> the stack pointer by 1 again.</li>
+<li>Write the least significant byte of the 16 bit value into memory at the location the stack pointer is now pointing to</li>
+</ul>
+<p>Notice that the stack pointer is decresed by 1 and not increased. This is because the stack grows downward in memory. This is extra helpful since the normal place for the stack to live is at the very end of memory. In a later chapter we'll see that it's actually the Game Boy's boot ROM that sets the stack pointer to the very end of memory. Thus, when the stack grows it grows away from the end of memory towards the beginning of memory.</p>
+<p>Let's implement <code class="hljs">PUSH</code>:</p>
+<pre style="position: relative;"><pre class="playpen" style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplayground hljs"><span class="hidden">
+<span class="hljs-meta">#![allow(unused_variables)]</span></span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Registers</span></span> { }</span><span class="hidden">
+<span class="hljs-keyword">impl</span> Registers { <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">get_bc</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">u16</span> { <span class="hljs-number">0</span> } }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">CPU</span></span> { pc: <span class="hljs-built_in">u16</span>, bus: Bus, sp: <span class="hljs-built_in">u16</span>, registers: Registers }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Bus</span></span> {}</span><span class="hidden">
+<span class="hljs-keyword">impl</span> Bus { <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">write_byte</span></span>(&amp;<span class="hljs-keyword">self</span>, addr: <span class="hljs-built_in">u16</span>, value: <span class="hljs-built_in">u8</span>) { } }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Instruction</span></span> { PUSH(StackTarget), }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">StackTarget</span></span> { BC, DE }</span>
+<span class="hljs-keyword">impl</span> CPU {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">execute</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, instruction: Instruction) -&gt; <span class="hljs-built_in">u16</span> {
+    <span class="hljs-keyword">match</span> instruction {
+      Instruction::PUSH(target) =&gt; {
+        <span class="hljs-keyword">let</span> value = <span class="hljs-keyword">match</span> target {
+          StackTarget::BC =&gt; <span class="hljs-keyword">self</span>.registers.get_bc(),
+          _ =&gt; { <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"TODO: support more targets"</span>) }
+        };
+        <span class="hljs-keyword">self</span>.push(value);
+        <span class="hljs-keyword">self</span>.pc.wrapping_add(<span class="hljs-number">1</span>)
+      }
+      _ =&gt; { <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"TODO: support more instructions"</span>) }
+    }
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">push</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, value: <span class="hljs-built_in">u16</span>) {
+    <span class="hljs-keyword">self</span>.sp = <span class="hljs-keyword">self</span>.sp.wrapping_sub(<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">self</span>.bus.write_byte(<span class="hljs-keyword">self</span>.sp, ((value &amp; <span class="hljs-number">0xFF00</span>) &gt;&gt; <span class="hljs-number">8</span>) <span class="hljs-keyword">as</span> <span class="hljs-built_in">u8</span>);
+
+    <span class="hljs-keyword">self</span>.sp = <span class="hljs-keyword">self</span>.sp.wrapping_sub(<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">self</span>.bus.write_byte(<span class="hljs-keyword">self</span>.sp, (value &amp; <span class="hljs-number">0xFF</span>) <span class="hljs-keyword">as</span> <span class="hljs-built_in">u8</span>);
+  }
+}<span class="hidden">
+}</span></code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>We can now push elements on to the stack. Here's what's actually happening when a <code class="hljs">PUSH</code> is performed:</p>
+<ul>
+<li>Read the least significant byte of the 16 bit value from memory at the location the stack pointer is pointing to</li>
+<li><em>Increase</em> the stack pointer by 1.</li>
+<li>Read the most significant byte of the 16 bit value from memory at the location the stack pointer is now pointing to</li>
+<li><em>Increase</em> the stack pointer by 1 again.</li>
+<li>Return the value with the most and least significant byte combined together</li>
+</ul>
+<p>Let's write <code class="hljs">POP</code>:</p>
+<pre style="position: relative;"><pre class="playpen" style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplayground hljs"><span class="hidden">
+<span class="hljs-meta">#![allow(unused_variables)]</span></span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Registers</span></span> { }</span><span class="hidden">
+<span class="hljs-keyword">impl</span> Registers { <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">set_bc</span></span>(&amp;<span class="hljs-keyword">self</span>, value: <span class="hljs-built_in">u16</span>) { } }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">CPU</span></span> { pc: <span class="hljs-built_in">u16</span>, bus: Bus, sp: <span class="hljs-built_in">u16</span>, registers: Registers }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Bus</span></span> {}</span><span class="hidden">
+<span class="hljs-keyword">impl</span> Bus { <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">read_byte</span></span>(&amp;<span class="hljs-keyword">self</span>, addr: <span class="hljs-built_in">u16</span>) -&gt; <span class="hljs-built_in">u8</span> { <span class="hljs-number">0</span> } }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Instruction</span></span> { POP(StackTarget), }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">StackTarget</span></span> { BC, DE }</span>
+<span class="hljs-keyword">impl</span> CPU {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">execute</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, instruction: Instruction) -&gt; <span class="hljs-built_in">u16</span> {
+    <span class="hljs-keyword">match</span> instruction {
+      Instruction::POP(target) =&gt; {
+        <span class="hljs-keyword">let</span> result = <span class="hljs-keyword">self</span>.pop();
+        <span class="hljs-keyword">match</span> target {
+            StackTarget::BC =&gt; <span class="hljs-keyword">self</span>.registers.set_bc(result),
+            _ =&gt; { <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"TODO: support more targets"</span>) }
+        };
+        <span class="hljs-keyword">self</span>.pc.wrapping_add(<span class="hljs-number">1</span>)
+      }
+      _ =&gt; { <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"TODO: support more instructions"</span>) }
+    }
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">pop</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">u16</span> {
+    <span class="hljs-keyword">let</span> lsb = <span class="hljs-keyword">self</span>.bus.read_byte(<span class="hljs-keyword">self</span>.sp) <span class="hljs-keyword">as</span> <span class="hljs-built_in">u16</span>;
+    <span class="hljs-keyword">self</span>.sp = <span class="hljs-keyword">self</span>.sp.wrapping_add(<span class="hljs-number">1</span>);
+
+    <span class="hljs-keyword">let</span> msb = <span class="hljs-keyword">self</span>.bus.read_byte(<span class="hljs-keyword">self</span>.sp) <span class="hljs-keyword">as</span> <span class="hljs-built_in">u16</span>;
+    <span class="hljs-keyword">self</span>.sp = <span class="hljs-keyword">self</span>.sp.wrapping_add(<span class="hljs-number">1</span>);
+
+    (msb &lt;&lt; <span class="hljs-number">8</span>) | lsb
+  }
+}<span class="hidden">
+}</span></code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>And there we have it! We have a working stack that we can used. But what sort of things is the stack used for? One built in use for the stack is creating a "call" stack that allows the game to "call" functions and return from them. Let's see how that works.</p>
+<a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/reading_and_writing_memory.html#calling-functions" id="calling-functions"><h2>Calling Functions</h2></a>
+<p>In most programming languages when you call a function, the state of the calling function is saved somewhere, execution is allowed to happen for the called function, and then when the called function returns, the state of the called function is restored. It turns out the Game Boy has built in support for this mechanism where the state that is saved is simply just what the program counter was when the called function was called. This means we can "call a function" and that function itself can call functions, and when all of that is done, we'll return right back to the place we left off before we called the function.</p>
+<p>This functionality is handled by two types of instructions <code class="hljs">CALL</code> and <code class="hljs">RET</code> (a.k.a return). The way <code class="hljs">CALL</code> works is by using a mixture of two instructions we already know about <code class="hljs">PUSH</code> and <code class="hljs">JP</code> (a.k.a jump). To execute the <code class="hljs">CALL</code> instruction, we must do the following:</p>
+<ul>
+<li><code class="hljs">PUSH</code> the next program counter (i.e. the program counter we would have if we were not jumping) on to the stack</li>
+<li><code class="hljs">JP</code> (a.k.a jump) to the address specified in the next 2 bytes of memory (a.k.a the function).</li>
+</ul>
+<p>And that's it! We've called into our function. But what happens when we call <code class="hljs">RET</code> (a.k.a return) from our called function? Here's what will happen:</p>
+<ul>
+<li><code class="hljs">POP</code> the next program counter off the stack and jump back to it.</li>
+</ul>
+<p>Well that's easy! Let's see it in code:</p>
+<pre style="position: relative;"><pre class="playpen" style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-play play-button" hidden="" title="Run this code" aria-label="Run this code"></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplayground hljs"><span class="hidden">
+<span class="hljs-meta">#![allow(unused_variables)]</span></span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">FlagsRegister</span></span> { zero: <span class="hljs-built_in">bool</span> }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Registers</span></span> { f: FlagsRegister }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">CPU</span></span> { pc: <span class="hljs-built_in">u16</span>, registers: Registers }</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Instruction</span></span> { CALL(JumpTest), RET(JumpTest)}</span><span class="hidden">
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">JumpTest</span></span> { NotZero }</span><span class="hidden">
+<span class="hljs-keyword">impl</span> CPU {</span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">read_next_word</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">u16</span> { <span class="hljs-number">0</span> }</span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">push</span></span>(&amp;<span class="hljs-keyword">self</span>, value: <span class="hljs-built_in">u16</span>) { }</span><span class="hidden">
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">pop</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">u16</span> { <span class="hljs-number">0</span> } }</span>
+<span class="hljs-keyword">impl</span> CPU {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">execute</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, instruction: Instruction) -&gt; <span class="hljs-built_in">u16</span> {
+    <span class="hljs-keyword">match</span> instruction {
+      Instruction::CALL(test) =&gt; {
+          <span class="hljs-keyword">let</span> jump_condition = <span class="hljs-keyword">match</span> test {
+              JumpTest::NotZero =&gt; !<span class="hljs-keyword">self</span>.registers.f.zero,
+              _ =&gt; { <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"TODO: support more conditions"</span>) }
+          };
+          <span class="hljs-keyword">self</span>.call(jump_condition)
+      }
+      Instruction::RET(test) =&gt; {
+          <span class="hljs-keyword">let</span> jump_condition = <span class="hljs-keyword">match</span> test {
+              JumpTest::NotZero =&gt; !<span class="hljs-keyword">self</span>.registers.f.zero,
+              _ =&gt; { <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"TODO: support more conditions"</span>) }
+          };
+          <span class="hljs-keyword">self</span>.return_(jump_condition)
+      }
+      _ =&gt; { <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"TODO: support more instructions"</span>) }
+    }
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">call</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, should_jump: <span class="hljs-built_in">bool</span>) -&gt; <span class="hljs-built_in">u16</span> {
+    <span class="hljs-keyword">let</span> next_pc = <span class="hljs-keyword">self</span>.pc.wrapping_add(<span class="hljs-number">3</span>);
+    <span class="hljs-keyword">if</span> should_jump {
+      <span class="hljs-keyword">self</span>.push(next_pc);
+      <span class="hljs-keyword">self</span>.read_next_word()
+    } <span class="hljs-keyword">else</span> {
+      next_pc
+    }
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">return_</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, should_jump: <span class="hljs-built_in">bool</span>) -&gt; <span class="hljs-built_in">u16</span> {
+    <span class="hljs-keyword">if</span> should_jump {
+      <span class="hljs-keyword">self</span>.pop()
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">self</span>.pc.wrapping_add(<span class="hljs-number">1</span>)
+    }
+  }
+}<span class="hidden">
+}</span></code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>Now we can easily call functions and return from them. We're now done with the vast majority of our CPU instructions!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="https://rylev.github.io/DMG-01/public/book/cpu/executing_instructions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="https://rylev.github.io/DMG-01/public/book/cpu/conclusion.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="https://rylev.github.io/DMG-01/public/book/cpu/executing_instructions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="https://rylev.github.io/DMG-01/public/book/cpu/conclusion.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="./WritingToMemory_files/elasticlunr.min.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./WritingToMemory_files/mark.min.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./WritingToMemory_files/searcher.js.download" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="./WritingToMemory_files/clipboard.min.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./WritingToMemory_files/highlight.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./WritingToMemory_files/book.js.download" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    
+
+<div class="Kudos"><template shadowrootmode="open"></template><style>.Kudos{z-index:2147483647;position:fixed;box-sizing:border-box;margin:0px;padding:0px;right:0px;bottom:0px;font-size:16px;font-family:"Poppins",sans-serif;line-height:1;-webkit-font-smoothing:antialiased}.Kudos-Mobile{font-size:16px;font-family:"Poppins",sans-serif;line-height:1;-webkit-font-smoothing:antialiased}
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL2NvbnRlbnQvY29udGFpbmVyL0t1ZG9zLmxhenkuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFQSxPQUNJLGtCQUFBLENBQ0EsY0FBQSxDQUNBLHFCQUFBLENBQ0EsVUFBQSxDQUNBLFdBQUEsQ0FDQSxTQUFBLENBQ0EsVUFBQSxDQUNBLGNBQUEsQ0FDQSxnQ0FBQSxDQUNBLGFBQUEsQ0FDQSxrQ0FBQSxDQUdKLGNBQ0ksY0FBQSxDQUNBLGdDQUFBLENBQ0EsYUFBQSxDQUNBLGtDQUFBIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzMj9mYW1pbHk9SW50ZXImZmFtaWx5PVBvcHBpbnM6d2dodEA0MDA7NTAwOzYwMDs3MDAmZGlzcGxheT1zd2FwJyk7XG5cbi5LdWRvcyB7XG4gICAgei1pbmRleDogMjE0NzQ4MzY0NztcbiAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgICBtYXJnaW46IDBweDtcbiAgICBwYWRkaW5nOiAwcHg7XG4gICAgcmlnaHQ6IDBweDtcbiAgICBib3R0b206IDBweDtcbiAgICBmb250LXNpemU6IDE2cHg7XG4gICAgZm9udC1mYW1pbHk6ICdQb3BwaW5zJywgc2Fucy1zZXJpZjtcbiAgICBsaW5lLWhlaWdodDogMTtcbiAgICAtd2Via2l0LWZvbnQtc21vb3RoaW5nOiBhbnRpYWxpYXNlZDtcbn1cblxuLkt1ZG9zLU1vYmlsZSB7XG4gICAgZm9udC1zaXplOiAxNnB4O1xuICAgIGZvbnQtZmFtaWx5OiAnUG9wcGlucycsIHNhbnMtc2VyaWY7XG4gICAgbGluZS1oZWlnaHQ6IDE7XG4gICAgLXdlYmtpdC1mb250LXNtb290aGluZzogYW50aWFsaWFzZWQ7XG59XG5cbkBpbXBvcnQgdXJsKCdodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2NzczI/ZmFtaWx5PUludGVyJmZhbWlseT1Qb3BwaW5zOndnaHRANDAwOzUwMDs2MDA7NzAwJmRpc3BsYXk9c3dhcCcpO1xuIl0sInNvdXJjZVJvb3QiOiIifQ== */</style><style>@import url(https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600;700&display=swap);</style><style>@import url(https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600;700&display=swap);</style></div></body></html>

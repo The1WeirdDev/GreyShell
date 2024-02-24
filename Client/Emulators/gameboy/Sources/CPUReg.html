@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)https://rylev.github.io/DMG-01/public/book/cpu/registers.html -->
+<html lang="en" class="js sidebar-visible light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Book generated using mdBook -->
+        
+        <title>CPU Registers - DMG-01: How to Emulate a Game Boy</title>
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="rgba(0, 0, 0, 0)">
+
+        <link rel="shortcut icon" href="https://rylev.github.io/DMG-01/public/book/favicon.png">
+        <link rel="stylesheet" href="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/variables.css">
+        <link rel="stylesheet" href="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/general.css">
+        <link rel="stylesheet" href="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/chrome.css">
+        <link rel="stylesheet" href="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/font-awesome.css">
+        <link href="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/css" rel="stylesheet" type="text/css">
+        <link href="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/css(1)" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/highlight.css">
+        <link rel="stylesheet" href="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/tomorrow-night.css" disabled="">
+        <link rel="stylesheet" href="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/ayu-highlight.css" disabled="">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    <style>@keyframes react-loading-skeleton {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.react-loading-skeleton {
+  --base-color: #ebebeb;
+  --highlight-color: #f5f5f5;
+  --animation-duration: 1.5s;
+  --animation-direction: normal;
+  --pseudo-element-display: block; /* Enable animation */
+
+  background-color: var(--base-color);
+
+  width: 100%;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  line-height: 1;
+
+  position: relative;
+  user-select: none;
+  overflow: hidden;
+  z-index: 1; /* Necessary for overflow: hidden to work correctly in Safari */
+}
+
+.react-loading-skeleton::after {
+  content: ' ';
+  display: var(--pseudo-element-display);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(
+    90deg,
+    var(--base-color),
+    var(--highlight-color),
+    var(--base-color)
+  );
+  transform: translateX(-100%);
+
+  animation-name: react-loading-skeleton;
+  animation-direction: var(--animation-direction);
+  animation-duration: var(--animation-duration);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion) {
+  .react-loading-skeleton {
+    --pseudo-element-display: none; /* Disable animation */
+  }
+}
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy9yZWFjdC1sb2FkaW5nLXNrZWxldG9uL2Rpc3Qvc2tlbGV0b24uY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7SUFDRSwyQkFBMkI7RUFDN0I7QUFDRjs7QUFFQTtFQUNFLHFCQUFxQjtFQUNyQiwwQkFBMEI7RUFDMUIsMEJBQTBCO0VBQzFCLDZCQUE2QjtFQUM3QiwrQkFBK0IsRUFBRSxxQkFBcUI7O0VBRXRELG1DQUFtQzs7RUFFbkMsV0FBVztFQUNYLHNCQUFzQjtFQUN0QixvQkFBb0I7RUFDcEIsY0FBYzs7RUFFZCxrQkFBa0I7RUFDbEIsaUJBQWlCO0VBQ2pCLGdCQUFnQjtFQUNoQixVQUFVLEVBQUUsK0RBQStEO0FBQzdFOztBQUVBO0VBQ0UsWUFBWTtFQUNaLHNDQUFzQztFQUN0QyxrQkFBa0I7RUFDbEIsTUFBTTtFQUNOLE9BQU87RUFDUCxRQUFRO0VBQ1IsWUFBWTtFQUNaLDRCQUE0QjtFQUM1Qjs7Ozs7R0FLQztFQUNELDRCQUE0Qjs7RUFFNUIsc0NBQXNDO0VBQ3RDLCtDQUErQztFQUMvQyw2Q0FBNkM7RUFDN0Msc0NBQXNDO0VBQ3RDLG1DQUFtQztBQUNyQzs7QUFFQTtFQUNFO0lBQ0UsOEJBQThCLEVBQUUsc0JBQXNCO0VBQ3hEO0FBQ0YiLCJzb3VyY2VzQ29udGVudCI6WyJAa2V5ZnJhbWVzIHJlYWN0LWxvYWRpbmctc2tlbGV0b24ge1xuICAxMDAlIHtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVgoMTAwJSk7XG4gIH1cbn1cblxuLnJlYWN0LWxvYWRpbmctc2tlbGV0b24ge1xuICAtLWJhc2UtY29sb3I6ICNlYmViZWI7XG4gIC0taGlnaGxpZ2h0LWNvbG9yOiAjZjVmNWY1O1xuICAtLWFuaW1hdGlvbi1kdXJhdGlvbjogMS41cztcbiAgLS1hbmltYXRpb24tZGlyZWN0aW9uOiBub3JtYWw7XG4gIC0tcHNldWRvLWVsZW1lbnQtZGlzcGxheTogYmxvY2s7IC8qIEVuYWJsZSBhbmltYXRpb24gKi9cblxuICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1iYXNlLWNvbG9yKTtcblxuICB3aWR0aDogMTAwJTtcbiAgYm9yZGVyLXJhZGl1czogMC4yNXJlbTtcbiAgZGlzcGxheTogaW5saW5lLWZsZXg7XG4gIGxpbmUtaGVpZ2h0OiAxO1xuXG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgdXNlci1zZWxlY3Q6IG5vbmU7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIHotaW5kZXg6IDE7IC8qIE5lY2Vzc2FyeSBmb3Igb3ZlcmZsb3c6IGhpZGRlbiB0byB3b3JrIGNvcnJlY3RseSBpbiBTYWZhcmkgKi9cbn1cblxuLnJlYWN0LWxvYWRpbmctc2tlbGV0b246OmFmdGVyIHtcbiAgY29udGVudDogJyAnO1xuICBkaXNwbGF5OiB2YXIoLS1wc2V1ZG8tZWxlbWVudC1kaXNwbGF5KTtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICB0b3A6IDA7XG4gIGxlZnQ6IDA7XG4gIHJpZ2h0OiAwO1xuICBoZWlnaHQ6IDEwMCU7XG4gIGJhY2tncm91bmQtcmVwZWF0OiBuby1yZXBlYXQ7XG4gIGJhY2tncm91bmQtaW1hZ2U6IGxpbmVhci1ncmFkaWVudChcbiAgICA5MGRlZyxcbiAgICB2YXIoLS1iYXNlLWNvbG9yKSxcbiAgICB2YXIoLS1oaWdobGlnaHQtY29sb3IpLFxuICAgIHZhcigtLWJhc2UtY29sb3IpXG4gICk7XG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWCgtMTAwJSk7XG5cbiAgYW5pbWF0aW9uLW5hbWU6IHJlYWN0LWxvYWRpbmctc2tlbGV0b247XG4gIGFuaW1hdGlvbi1kaXJlY3Rpb246IHZhcigtLWFuaW1hdGlvbi1kaXJlY3Rpb24pO1xuICBhbmltYXRpb24tZHVyYXRpb246IHZhcigtLWFuaW1hdGlvbi1kdXJhdGlvbik7XG4gIGFuaW1hdGlvbi10aW1pbmctZnVuY3Rpb246IGVhc2UtaW4tb3V0O1xuICBhbmltYXRpb24taXRlcmF0aW9uLWNvdW50OiBpbmZpbml0ZTtcbn1cblxuQG1lZGlhIChwcmVmZXJzLXJlZHVjZWQtbW90aW9uKSB7XG4gIC5yZWFjdC1sb2FkaW5nLXNrZWxldG9uIHtcbiAgICAtLXBzZXVkby1lbGVtZW50LWRpc3BsYXk6IG5vbmU7IC8qIERpc2FibGUgYW5pbWF0aW9uICovXG4gIH1cbn1cbiJdLCJzb3VyY2VSb290IjoiIn0= */</style></head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">var path_to_root = "../";</script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents" aria-hidden="false">
+            <ol class="chapter"><li><a href="https://rylev.github.io/DMG-01/public/book/introduction.html" tabindex="0"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/architecture_overview.html" tabindex="0"><strong aria-hidden="true">2.</strong> Architecture Overview</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/introduction.html" tabindex="0"><strong aria-hidden="true">3.</strong> CPU</a></li><li><ol class="section"><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/registers.html" class="active" tabindex="0"><strong aria-hidden="true">3.1.</strong> CPU Registers</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/register_data_instructions.html" tabindex="0"><strong aria-hidden="true">3.2.</strong> Instructions on Register Data</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/executing_instructions.html" tabindex="0"><strong aria-hidden="true">3.3.</strong> Instruction Execution and Control Flow</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/reading_and_writing_memory.html" tabindex="0"><strong aria-hidden="true">3.4.</strong> Instructions for Reading and Writting to Memory</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/cpu/conclusion.html" tabindex="0"><strong aria-hidden="true">3.5.</strong> Finishing Up the CPU</a></li></ol></li><li><a href="https://rylev.github.io/DMG-01/public/book/graphics/introduction.html" tabindex="0"><strong aria-hidden="true">4.</strong> Graphics</a></li><li><ol class="section"><li><a href="https://rylev.github.io/DMG-01/public/book/graphics/tile_ram.html" tabindex="0"><strong aria-hidden="true">4.1.</strong> Tile RAM</a></li></ol></li><li><a href="https://rylev.github.io/DMG-01/public/book/memory_map.html" tabindex="0"><strong aria-hidden="true">5.</strong> Memory Map</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/index.html" tabindex="0"><strong aria-hidden="true">6.</strong> Appendix</a></li><li><ol class="section"><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/numbers.html" tabindex="0"><strong aria-hidden="true">6.1.</strong> Numbers</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/number_notations.html" tabindex="0"><strong aria-hidden="true">6.2.</strong> Number Notations</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/bit_manipulation.html" tabindex="0"><strong aria-hidden="true">6.3.</strong> Bit Manipulation</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/resources.html" tabindex="0"><strong aria-hidden="true">6.4.</strong> Resources</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/instruction_guide/index.html" tabindex="0"><strong aria-hidden="true">6.5.</strong> Instruction Guide</a></li><li><a href="https://rylev.github.io/DMG-01/public/book/appendix/cartridge_header.html" tabindex="0"><strong aria-hidden="true">6.6.</strong> Cartridge Header</a></li></ol></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar bordered folded">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar" aria-expanded="true">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">DMG-01: How to Emulate a Game Boy</h1> 
+
+                        <div class="right-buttons">
+                            <a href="https://rylev.github.io/DMG-01/public/book/print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/registers.html#cpu-registers" id="cpu-registers"><h1>CPU Registers</h1></a>
+<p>In the previous chapter we outlined some of things that the CPU is responsible for. In this chapter we'll be focusing on just one of them: saving small amounts of data into registers.</p>
+<a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/registers.html#overview" id="overview"><h2>Overview</h2></a>
+<p>The Game Boy's CPU is a custom chip made just for the Game Boy. The chip is extremely similar to the <a href="https://en.wikipedia.org/wiki/Intel_8080">Intel 8080</a> which is itself similar to the <a href="https://en.wikipedia.org/wiki/Zilog_Z80">Zilog Z80</a>. While the Intel 8080 and Zilog Z80 were used in many different computers in the 70s and 80s, the chip inside the Game Boy was just used for the Game Boy. Most of what's true about how the 8080 and Z80 work is also true of the Game Boy's chip. We won't go into details on how exactly they differ, but it's important to be aware that while they're similar to the Game Boy's chip, they're not exactly the same.</p>
+<a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/registers.html#registers" id="registers"><h2>Registers</h2></a>
+<p>The CPU is composed of 8 different "registers". Registers are responsible for holding on to little pieces of data that the CPU can manipulate when it executes various instructions. The Game Boy's CPU is an 8-Bit CPU, meaning that each of its registers can hold 8 bits (a.k.a 1 byte) of data. The CPU has 8 different registers labled as "a", "b", "c", "d", "e", "f", "h", "l".</p>
+<p>Let's get started building our CPU by specing out the registers in code:</p>
+<pre style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button></div><code class="language-rust noplaypen hljs"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Registers</span></span> {
+  a: <span class="hljs-built_in">u8</span>,
+  b: <span class="hljs-built_in">u8</span>,
+  c: <span class="hljs-built_in">u8</span>,
+  d: <span class="hljs-built_in">u8</span>,
+  e: <span class="hljs-built_in">u8</span>,
+  f: <span class="hljs-built_in">u8</span>,
+  h: <span class="hljs-built_in">u8</span>,
+  l: <span class="hljs-built_in">u8</span>,
+}
+</code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>We use the type <code class="hljs">u8</code> for our registers. <code class="hljs">u8</code> are 8-bit unsigned integers. For a refresher on how numbers are stored in computers, checkout the <a href="https://rylev.github.io/DMG-01/public/book/cpu/appendix/numbers.html">guide on numbers</a>.</p>
+<p>While the CPU only has 8 bit registers, there are instructions that allow the game to read and write 16 bits (i.e. 2 bytes) at the same time (denoted as <code class="hljs">u16</code> in Rust - a 16 bit unsigned integer). Therefore, we'll need the ability to read an write these "virtual" 16 bit registers. These registers are refered to as "af" ("a" and "f" combined), "bc" ("b" and "c" combined), "de" ("d" and "e" combinded), and finally "hl" ("h" and "l" combined). Let's implement "bc":</p>
+<pre style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplaypen hljs"><span class="hidden"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Registers</span></span> { a: <span class="hljs-built_in">u8</span>, b: <span class="hljs-built_in">u8</span>, c: <span class="hljs-built_in">u8</span>, d: <span class="hljs-built_in">u8</span>, e: <span class="hljs-built_in">u8</span>, f: <span class="hljs-built_in">u8</span>, h: <span class="hljs-built_in">u8</span>, l: <span class="hljs-built_in">u8</span>, }
+</span><span class="hljs-keyword">impl</span> Registers {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">get_bc</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">u16</span> {
+    (<span class="hljs-keyword">self</span>.b <span class="hljs-keyword">as</span> <span class="hljs-built_in">u16</span>) &lt;&lt; <span class="hljs-number">8</span>
+    | <span class="hljs-keyword">self</span>.c <span class="hljs-keyword">as</span> <span class="hljs-built_in">u16</span>
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">set_bc</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, value: <span class="hljs-built_in">u16</span>) {
+    <span class="hljs-keyword">self</span>.b = ((value &amp; <span class="hljs-number">0xFF00</span>) &gt;&gt; <span class="hljs-number">8</span>) <span class="hljs-keyword">as</span> <span class="hljs-built_in">u8</span>;
+    <span class="hljs-keyword">self</span>.c = (value &amp; <span class="hljs-number">0xFF</span>) <span class="hljs-keyword">as</span> <span class="hljs-built_in">u8</span>;
+  }
+}
+</code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>Here we see our first instance of "bit manipulation" through the use of four bitwise operators: "&gt;&gt;", "&lt;&lt;", "&amp;", and "|". If you're unfamiliar with or feel a bit rusty using these types of operators, check out the <a href="https://rylev.github.io/DMG-01/public/book/cpu/appendix/bit_manipulation.html">guide on bit manipulation</a>.</p>
+<p>For reading the "bc" register we first treat the "b" register as a <code class="hljs">u16</code> (this effectively just adds a byte of all 0s to the most significant position of the number). We then shift the "b" register 8 positions so that it's occupying the most significant byte position. Finally, we bitwise OR the "c" register. The result is a two byte number with the contents of "b" in the most significant byte position and the contents of "c" in the least significant byte position.</p>
+<a class="header" href="https://rylev.github.io/DMG-01/public/book/cpu/registers.html#flags-register" id="flags-register"><h2>Flags Register</h2></a>
+<p>We're almost done with our registers, but there's one thing we way we can improve our registers for use later. The "f" register is a special register called the "flags" register. The lower four bits of the register are <em>always</em> 0s and the CPU automatically writes to the upper four bits when certain things happen. In other words, the CPU "flags" certain states. We won't go into the specific meanings of the flags just yet, but for now just know that they have the following names and positions:</p>
+<ul>
+<li>Bit 7: "zero"</li>
+<li>Bit 6: "subtraction"</li>
+<li>Bit 5: "half carry"</li>
+<li>Bit 4: "carry"</li>
+</ul>
+<p>Here's a diagram of the flags register:</p>
+<pre style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button></div><code class="language-ignore hljs">   ┌-&gt; Carry
+ ┌-+&gt; Subtraction
+ | |
+1111 0000
+| |
+└-+&gt; Zero
+  └-&gt; Half Carry
+</code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>So while we could continue modeling our flags register as a simple 8-bit number (after all, that's all it is in reality), it might be less error prone to explicitly model the fact that the upper 4 bits (a.k.a the upper "nibble") has specific meaning and the lower 4 bits (a.k.a the lower "nibble") must always be zeros.</p>
+<p>For this reason we'll make a struct called the <code class="hljs">FlagsRegister</code>:</p>
+<pre style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button></div><code class="language-rust noplaypen hljs"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">FlagsRegister</span></span> {
+    zero: <span class="hljs-built_in">bool</span>,
+    subtract: <span class="hljs-built_in">bool</span>,
+    half_carry: <span class="hljs-built_in">bool</span>,
+    carry: <span class="hljs-built_in">bool</span>
+}
+</code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>Since we might need to look at this register as an 8-bit number, we can implement some traits from the standard library that make this easy:</p>
+<pre style="position: relative;"><div class="buttons"><button class="fa fa-copy clip-button" title="Copy to clipboard" aria-label="Copy to clipboard"><i class="tooltiptext"></i></button><button class="fa fa-expand" title="Show hidden lines" aria-label="Show hidden lines"></button></div><code class="language-rust noplaypen hljs"><span class="hidden"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">FlagsRegister</span></span> {
+</span><span class="hidden">   zero: <span class="hljs-built_in">bool</span>,
+</span><span class="hidden">   subtract: <span class="hljs-built_in">bool</span>,
+</span><span class="hidden">   half_carry: <span class="hljs-built_in">bool</span>,
+</span><span class="hidden">   carry: <span class="hljs-built_in">bool</span>
+</span><span class="hidden">}
+</span><span class="hljs-keyword">const</span> ZERO_FLAG_BYTE_POSITION: <span class="hljs-built_in">u8</span> = <span class="hljs-number">7</span>;
+<span class="hljs-keyword">const</span> SUBTRACT_FLAG_BYTE_POSITION: <span class="hljs-built_in">u8</span> = <span class="hljs-number">6</span>;
+<span class="hljs-keyword">const</span> HALF_CARRY_FLAG_BYTE_POSITION: <span class="hljs-built_in">u8</span> = <span class="hljs-number">5</span>;
+<span class="hljs-keyword">const</span> CARRY_FLAG_BYTE_POSITION: <span class="hljs-built_in">u8</span> = <span class="hljs-number">4</span>;
+
+<span class="hljs-keyword">impl</span> std::convert::<span class="hljs-built_in">From</span>&lt;FlagsRegister&gt; <span class="hljs-keyword">for</span> <span class="hljs-built_in">u8</span>  {
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">from</span></span>(flag: FlagsRegister) -&gt; <span class="hljs-built_in">u8</span> {
+        (<span class="hljs-keyword">if</span> flag.zero       { <span class="hljs-number">1</span> } <span class="hljs-keyword">else</span> { <span class="hljs-number">0</span> }) &lt;&lt; ZERO_FLAG_BYTE_POSITION |
+        (<span class="hljs-keyword">if</span> flag.subtract   { <span class="hljs-number">1</span> } <span class="hljs-keyword">else</span> { <span class="hljs-number">0</span> }) &lt;&lt; SUBTRACT_FLAG_BYTE_POSITION |
+        (<span class="hljs-keyword">if</span> flag.half_carry { <span class="hljs-number">1</span> } <span class="hljs-keyword">else</span> { <span class="hljs-number">0</span> }) &lt;&lt; HALF_CARRY_FLAG_BYTE_POSITION |
+        (<span class="hljs-keyword">if</span> flag.carry      { <span class="hljs-number">1</span> } <span class="hljs-keyword">else</span> { <span class="hljs-number">0</span> }) &lt;&lt; CARRY_FLAG_BYTE_POSITION
+    }
+}
+
+<span class="hljs-keyword">impl</span> std::convert::<span class="hljs-built_in">From</span>&lt;<span class="hljs-built_in">u8</span>&gt; <span class="hljs-keyword">for</span> FlagsRegister {
+    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">from</span></span>(byte: <span class="hljs-built_in">u8</span>) -&gt; <span class="hljs-keyword">Self</span> {
+        <span class="hljs-keyword">let</span> zero = ((byte &gt;&gt; ZERO_FLAG_BYTE_POSITION) &amp; <span class="hljs-number">0b1</span>) != <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">let</span> subtract = ((byte &gt;&gt; SUBTRACT_FLAG_BYTE_POSITION) &amp; <span class="hljs-number">0b1</span>) != <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">let</span> half_carry = ((byte &gt;&gt; HALF_CARRY_FLAG_BYTE_POSITION) &amp; <span class="hljs-number">0b1</span>) != <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">let</span> carry = ((byte &gt;&gt; CARRY_FLAG_BYTE_POSITION) &amp; <span class="hljs-number">0b1</span>) != <span class="hljs-number">0</span>;
+
+        FlagsRegister {
+            zero,
+            subtract,
+            half_carry,
+            carry
+        }
+    }
+}
+</code><div class="open_grepper_editor" title="Edit &amp; Save To Grepper"></div></pre>
+<p>The <code class="hljs">std::convert::From</code> trait allows us to easily convert our FlagsRegister from a <code class="hljs">u8</code> and back.</p>
+<p>Now that we have our special <code class="hljs">FlagsRegister</code>, we can replace the <code class="hljs">u8</code> in our <code class="hljs">Registers</code> struct's <code class="hljs">f</code> field.</p>
+<p>And that's it! We have all the functionality we need for our registers. Next we'll be looking at different instructions for manipulating the registers.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="https://rylev.github.io/DMG-01/public/book/cpu/introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="https://rylev.github.io/DMG-01/public/book/cpu/register_data_instructions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="https://rylev.github.io/DMG-01/public/book/cpu/introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="https://rylev.github.io/DMG-01/public/book/cpu/register_data_instructions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/elasticlunr.min.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/mark.min.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/searcher.js.download" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/clipboard.min.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/highlight.js.download" type="text/javascript" charset="utf-8"></script>
+        <script src="./CPU Registers - DMG-01_ How to Emulate a Game Boy_files/book.js.download" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    
+
+<div class="Kudos"><template shadowrootmode="open"></template><style>.Kudos{z-index:2147483647;position:fixed;box-sizing:border-box;margin:0px;padding:0px;right:0px;bottom:0px;font-size:16px;font-family:"Poppins",sans-serif;line-height:1;-webkit-font-smoothing:antialiased}.Kudos-Mobile{font-size:16px;font-family:"Poppins",sans-serif;line-height:1;-webkit-font-smoothing:antialiased}
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL2NvbnRlbnQvY29udGFpbmVyL0t1ZG9zLmxhenkuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFQSxPQUNJLGtCQUFBLENBQ0EsY0FBQSxDQUNBLHFCQUFBLENBQ0EsVUFBQSxDQUNBLFdBQUEsQ0FDQSxTQUFBLENBQ0EsVUFBQSxDQUNBLGNBQUEsQ0FDQSxnQ0FBQSxDQUNBLGFBQUEsQ0FDQSxrQ0FBQSxDQUdKLGNBQ0ksY0FBQSxDQUNBLGdDQUFBLENBQ0EsYUFBQSxDQUNBLGtDQUFBIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzMj9mYW1pbHk9SW50ZXImZmFtaWx5PVBvcHBpbnM6d2dodEA0MDA7NTAwOzYwMDs3MDAmZGlzcGxheT1zd2FwJyk7XG5cbi5LdWRvcyB7XG4gICAgei1pbmRleDogMjE0NzQ4MzY0NztcbiAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgICBtYXJnaW46IDBweDtcbiAgICBwYWRkaW5nOiAwcHg7XG4gICAgcmlnaHQ6IDBweDtcbiAgICBib3R0b206IDBweDtcbiAgICBmb250LXNpemU6IDE2cHg7XG4gICAgZm9udC1mYW1pbHk6ICdQb3BwaW5zJywgc2Fucy1zZXJpZjtcbiAgICBsaW5lLWhlaWdodDogMTtcbiAgICAtd2Via2l0LWZvbnQtc21vb3RoaW5nOiBhbnRpYWxpYXNlZDtcbn1cblxuLkt1ZG9zLU1vYmlsZSB7XG4gICAgZm9udC1zaXplOiAxNnB4O1xuICAgIGZvbnQtZmFtaWx5OiAnUG9wcGlucycsIHNhbnMtc2VyaWY7XG4gICAgbGluZS1oZWlnaHQ6IDE7XG4gICAgLXdlYmtpdC1mb250LXNtb290aGluZzogYW50aWFsaWFzZWQ7XG59XG5cbkBpbXBvcnQgdXJsKCdodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2NzczI/ZmFtaWx5PUludGVyJmZhbWlseT1Qb3BwaW5zOndnaHRANDAwOzUwMDs2MDA7NzAwJmRpc3BsYXk9c3dhcCcpO1xuIl0sInNvdXJjZVJvb3QiOiIifQ== */</style><style>@import url(https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600;700&display=swap);</style><style>@import url(https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600;700&display=swap);</style></div></body></html>

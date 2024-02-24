@@ -3,6 +3,8 @@ class WebPages {
     switch (name) {
       case "snake":
       case "1v1shooter":
+      case "matching":
+      case "tetris":
         return true;
       default:
         return false;
@@ -11,6 +13,8 @@ class WebPages {
   static IsEmulatorName(name) {
     switch (name) {
       case "chip8":
+      case "gameboy":
+      case "nes":
         return true;
       default:
         return false;

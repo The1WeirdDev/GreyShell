@@ -1,0 +1,53 @@
+.game-container{
+	width:400px;
+	height:400px;
+	background-color:rgb(227, 227, 227);
+	border-radius:12px;
+	margin:auto;
+	margin-top:2vw;
+	display:flex;
+	flex-wrap:wrap;
+	overflow:hidden;
+}
+
+.game-container > img{
+	width:100%;
+	height:100%;
+	top:0%;
+	left:0%;
+	z-index:0;
+}
+.GAMEHEADER{
+	position:absolute;
+	top:420px;
+}
+.game-div{
+	z-index:5;
+	width:45%;
+	height:45%;
+	margin-left:3.5%;
+	margin-top:3.75%;
+	background-color:rgb(209, 209, 209);
+	border-radius:10px;
+}
+
+.game-div > img{
+	position:relative;
+	left:10%;
+	top:0%;
+	width:80%;
+	height:80%;
+	top:0%;
+	background-color:red;
+	border-radius:10px;
+}
+
+.game-div > h1{
+	text-align:center;
+	position:relative;
+	z-index:15;
+	height:20%;
+	width:100%;
+	font-size:12px;
+	font-family:roboto;
+}

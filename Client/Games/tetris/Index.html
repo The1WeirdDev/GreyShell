@@ -30,9 +30,15 @@
       </div>
     </div>
 
-    <canvas class="game-canvas" id="GameCanvas"></canvas>
-    <script src="/utils/Webgl/gl-matrix.js"></script>
-    <script type="module" src="/games/1v1shooter/Main.js"></script>
+    <div class="game-canvas-container">
+      <div>
+        <div class="game-info">
+          <h1 id="ScoreLabel">Score: 0</h1>
+        </div>
+      </div>
+      <canvas class="game-canvas" id="GameCanvas"></canvas>
+    </div>
+    <script type="module" src="/games/tetris/Game.js"></script>
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"

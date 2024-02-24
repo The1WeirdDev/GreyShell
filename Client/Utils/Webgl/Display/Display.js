@@ -1,23 +1,43 @@
 import Globals from "/utils/Webgl/Globals.js";
 
-export default class Display{
-    static gl = null;
+export default class Display {
+  static gl = null;
 
-    static Init(canvas){
-        Display.canvas = canvas;
-        Display.canvas.width = 1280;
-        Display.canvas.height = 720;
-        Display.gl = canvas.getContext("webgl");
-        Globals.gl = Display.gl;
+  static Init(canvas) {
+    Display.canvas = canvas;
+    Display.canvas.width = 1280;
+    Display.canvas.height = 720;
+    Globals.gl = canvas.getContext("webgl2");
 
-        Display.SetBackgroundColor(0, 0, 0);
-    }
+    Display.OnResized(Display.canvas.width, Display.canvas.height);
 
-    static SetBackgroundColor(red, green, blue){
-        Display.gl.clearColor(red, green, blue, 1);
-    }
+    Globals.gl.enable(Globals.gl.DEPTH_TEST);
 
-    static Update(){
-        Display.gl.clear(Display.gl.COLOR_BUFFER_BIT);
-    }
+    Display.SetBackgroundColor(0, 0, 0);
+  }
+
+  static GetAspectRatio() {
+    return Display.canvas.width / Display.canvas.height;
+  }
+
+  static GetAspectRatioYX() {
+    return Display.canvas.height / Display.canvas.width;
+  }
+  static SetBackgroundColor(red, green, blue) {
+    Globals.gl.clearColor(red, green, blue, 1);
+  }
+
+  static OnResized(width, height) {
+    Display.width = width;
+    Display.height = height;
+    Globals.gl.viewport(0, 0, width, height);
+  }
+
+  static Update() {
+    Globals.gl.clear(Globals.gl.COLOR_BUFFER_BIT | Globals.gl.DEPTH_BUFFER_BIT);
+  }
+
+  static ClearDepthBuffer() {
+    Globals.gl.clear(Globals.gl.DEPTH_BUFFER_BIT);
+  }
 }
