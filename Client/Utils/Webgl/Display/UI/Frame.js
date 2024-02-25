@@ -20,5 +20,4 @@ export default class Frame {
   SetSizeConstraint(size_constraint) {
     this.constraint = size_constraint;
   }
-  DrawMesh() {}
 }

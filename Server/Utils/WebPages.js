@@ -5,6 +5,7 @@ class WebPages {
       case "1v1shooter":
       case "matching":
       case "tetris":
+      case "snake2":
         return true;
       default:
         return false;

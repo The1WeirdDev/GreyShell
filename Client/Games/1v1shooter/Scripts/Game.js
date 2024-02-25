@@ -6,8 +6,14 @@ import Shader from "/utils/Webgl/Display/Shader.js";
 import Texture from "/utils/Webgl/Display/Texture.js";
 
 import UI from "/utils/Webgl/Display/UI/UI.js";
+import { SizeConstraint } from "/utils/Webgl/Display/UI/UI.js";
 import Frame from "/utils/Webgl/Display/UI/Frame.js";
-import { SizeConstraint } from "/Utils/Webgl/Display/UI/UI.js";
+import TexturedFrame from "/utils/Webgl/Display/UI/TexturedFrame.js";
+
+import Entity from "/games/1v1shooter/Scripts/Entities/Entity.js";
+
+import Time from "/utils/Utils/Time.js";
+import MatrixUtils from "/utils/Utils/MatrixUtils.js";
 
 var vertex_data = `
 			precision mediump float;
@@ -38,7 +44,7 @@ export default class Game {
     Display.Init(document.getElementById("GameCanvas"));
     Game.mesh = new TexturedMesh();
     Game.mesh.Create(
-      [0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0],
+      [0, 0, -5, 0, 1, -5, 1, 0, -5, 1, 1, -5],
       [0, 1, 2, 2, 1, 3],
       [0, 0, 0, 1, 1, 0, 1, 1],
       3,
@@ -67,11 +73,22 @@ export default class Game {
     mat4.translate(Game.view_matrix, Game.view_matrix, [0, 0, -15]);
     UI.Init();
 
-    Game.frame = new Frame(-0.5, 0, 1, 1);
-    Game.frame.SetSizeConstraint(SizeConstraint.FlippedAspectX);
+    Game.frame = new TexturedFrame(-0.5, 0, 1, 1, Game.normal_texture);
+    Game.frame.SetSizeConstraint(SizeConstraint.ReverseAspectX);
+
+    Game.entity = new Entity();
+    Time.Init();
   }
 
-  static Update() {}
+  static Update() {
+    Time.Update();
+    Game.entity.position.z += Time.delta_time;
+    Game.entity.rotation.y += Time.delta_time;
+    Game.view_matrix = MatrixUtils.GenerateViewMatrix(
+      Game.entity.position,
+      Game.entity.rotation,
+    );
+  }
 
   static Draw() {
     Display.Update();
@@ -88,7 +105,7 @@ export default class Game {
 
     //Drawing UI
     Display.ClearDepthBuffer();
-    UI.DrawFrame(Game.frame);
+    // UI.DrawTexturedFrame(Game.frame);
   }
 
   static CleanUp() {}
