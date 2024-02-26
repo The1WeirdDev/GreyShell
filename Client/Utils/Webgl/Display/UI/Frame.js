@@ -1,8 +1,10 @@
 import TexturedMesh from "/utils/Webgl/Display/Mesh/TexturedMesh.js";
 import { SizeConstraint } from "/utils/Webgl/Display/UI/UI.js";
+import UI from "/utils/Webgl/Display/UI/UI.js"
 
-export default class Frame {
+export default class Frame extends UI{
   constructor(x, y, width, height, color, size_constraint) {
+    super();
     this.position = [x, y];
 
     this.width = width;
@@ -15,6 +17,7 @@ export default class Frame {
       size_constraint = SizeConstraint.None;
     }
     this.constraint = size_constraint;
+    this.is_renderable = false;
   }
 
   SetSizeConstraint(size_constraint) {

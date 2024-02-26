@@ -16,6 +16,9 @@ export default class Display {
     Display.SetBackgroundColor(0, 0, 0);
   }
 
+  static GetBoundingClientRect(){
+    return Display.canvas.getBoundingClientRect();
+  }
   static GetAspectRatio() {
     return Display.canvas.width / Display.canvas.height;
   }

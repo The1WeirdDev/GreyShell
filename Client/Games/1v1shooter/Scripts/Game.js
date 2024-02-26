@@ -6,6 +6,7 @@ import Shader from "/utils/Webgl/Display/Shader.js";
 import Texture from "/utils/Webgl/Display/Texture.js";
 
 import UI from "/utils/Webgl/Display/UI/UI.js";
+import UIRenderer from "/utils/Webgl/Display/UI/UIRenderer.js";
 import { SizeConstraint } from "/utils/Webgl/Display/UI/UI.js";
 import Frame from "/utils/Webgl/Display/UI/Frame.js";
 import TexturedFrame from "/utils/Webgl/Display/UI/TexturedFrame.js";
@@ -14,6 +15,8 @@ import Entity from "/games/1v1shooter/Scripts/Entities/Entity.js";
 
 import Time from "/utils/Utils/Time.js";
 import MatrixUtils from "/utils/Utils/MatrixUtils.js";
+import Keyboard from "/utils/Utils/Input/Keyboard.js";
+import Mouse from "/utils/Utils/Input/Mouse.js";
 
 var vertex_data = `
 			precision mediump float;
@@ -73,21 +76,60 @@ export default class Game {
     mat4.translate(Game.view_matrix, Game.view_matrix, [0, 0, -15]);
     UI.Init();
 
-    Game.frame = new TexturedFrame(-0.5, 0, 1, 1, Game.normal_texture);
+    Game.frame = new Frame(-0.5, 0, 0.25, 0.25);
     Game.frame.SetSizeConstraint(SizeConstraint.ReverseAspectX);
+    Game.frame.AddnMouseButtonClickEvent(0, ()=>{console.log("Hello")});
 
     Game.entity = new Entity();
+    Keyboard.Init();
+    Mouse.Init();
+    Game.AddEventListeners();
     Time.Init();
+  }
+
+  static AddEventListeners(){
+    document.addEventListener("mouseover", (event) => {
+      Keyboard.OnMouseEnter();
+    });
+  
+    document.addEventListener("mouseleave", (event) => {
+      Keyboard.OnFocusLost();
+    });
+
+    document.addEventListener("keydown", (event)=>{
+      Keyboard.OnKeyPress(event);
+    })
+    
+    document.addEventListener("keyup", (event)=>{
+      Keyboard.OnKeyRelease(event);
+    });
+
+    document.addEventListener("focusout", ()=>{
+      Keyboard.OnFocusLost();
+    });
+
+    document.addEventListener("mousedown", (e)=>{
+      Mouse.OnMouseClick(e);
+    });
+    
+    document.addEventListener("mouseup", (e)=>{
+      Mouse.OnMouseRelease(e);
+    });
+
+    document.querySelector("canvas").addEventListener("mousemove",(e)=>{Mouse.OnMouseMove(e);});
   }
 
   static Update() {
     Time.Update();
-    Game.entity.position.z += Time.delta_time;
-    Game.entity.rotation.y += Time.delta_time;
+    Game.entity.Update();
+
+    //Game.entity.rotation.y += Time.delta_time;
     Game.view_matrix = MatrixUtils.GenerateViewMatrix(
       Game.entity.position,
       Game.entity.rotation,
     );
+    Keyboard.LateUpdate();
+    Mouse.LateUpdate();
   }
 
   static Draw() {
@@ -105,7 +147,7 @@ export default class Game {
 
     //Drawing UI
     Display.ClearDepthBuffer();
-    // UI.DrawTexturedFrame(Game.frame);
+    UIRenderer.DrawFrame(Game.frame);
   }
 
   static CleanUp() {}

@@ -13,7 +13,26 @@ export const SizeConstraint = {
   ReverseAspectX: 3, //X Gets multiplier by aspect ratio
   ReverseAspectY: 4, //Y Gets multiplier by aspect ratio
 };
+
 export default class UI {
+  z_index = 0;
+  is_hovered = false;
+  is_renderable = true;
+  
+  mouse_click_events = [];//Each element will be an object with a button and a function
+
+  constructor(){
+    //Every ui will have this
+    //Z index is mainly for rendering and should have affect for buttons
+    this.z_index = 0;
+    this.is_hovered = false;
+    this.is_renderable = true;
+  }
+
+  AddMouseButtonClickEvent(button, func){
+    this.mouse_click_events.push({"button":button, "func":func});
+  }
+
   static Init() {
     UI.textured_mesh = new TexturedMesh();
     UI.textured_mesh.Create(
@@ -29,49 +48,14 @@ export default class UI {
     UI.textured_frame_shader = new UITexturedFrameShader();
     UI.textured_frame_shader.Create();
   }
+  static Update(){
 
-  static GetSizeFromUI(ui) {
-    switch (ui.constraint) {
-      case SizeConstraint.AspectX:
-        return [Display.GetAspectRatio() * ui.width, ui.height];
-      case SizeConstraint.AspectY:
-        return [ui.width, Display.GetAspectRatio() * ui.height];
-      case SizeConstraint.ReverseAspectX:
-        return [Display.GetAspectRatioYX() * ui.width, ui.height];
-      case SizeConstraint.ReverseAspectY:
-        return [ui.width, Display.GetAspectRatioYX() * ui.height];
+  }
+
+  static OnMouseButtonClick(button){
+    for(var i = 0; i < UI.uis.length; i++){
+      //TODO : Implement ui click events]
+      
     }
-  }
-  static DrawFrame(frame) {
-    UI.frame_shader.Start();
-    //Color
-    UI.frame_shader.LoadVector3Array(
-      UI.frame_shader.color_location,
-      frame.color,
-    );
-    //Position
-    UI.frame_shader.LoadVector2Array(
-      UI.frame_shader.position_location,
-      frame.position,
-    );
-    //Size
-    var size = UI.GetSizeFromUI(frame);
-    UI.frame_shader.LoadVector2Array(UI.frame_shader.size_location, size);
-    UI.textured_mesh.Draw();
-  }
-  static DrawTexturedFrame(textured_frame) {
-    UI.textured_frame_shader.Start();
-    //Position
-    UI.textured_frame_shader.LoadVector2Array(
-      UI.textured_frame_shader.position_location,
-      textured_frame.position,
-    );
-    //Size
-    var size = UI.GetSizeFromUI(textured_frame);
-    UI.textured_frame_shader.LoadVector2Array(
-      UI.textured_frame_shader.size_location,
-      size,
-    );
-    UI.textured_mesh.Draw();
   }
 }
