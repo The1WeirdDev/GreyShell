@@ -14,6 +14,9 @@ export default class Display {
     Globals.gl.enable(Globals.gl.DEPTH_TEST);
 
     Display.SetBackgroundColor(0, 0, 0);
+
+    Display.canvas.oncontextmenu = (e)=>{e.preventDefault();}
+    Display.canvas.onselectstart = function(){return false;}
   }
 
   static GetBoundingClientRect(){

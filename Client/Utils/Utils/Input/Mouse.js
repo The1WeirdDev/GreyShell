@@ -1,4 +1,6 @@
 import Display from "/utils/Webgl/Display/Display.js";
+import UI from "/utils/Webgl/Display/UI/UI.js"
+
 export default class Mouse{
     static Init(){
         Mouse.buttons = new Uint8Array(8);
@@ -30,7 +32,7 @@ export default class Mouse{
         Mouse.position.x = e.clientX - rect.left;
         Mouse.position.y = rect.height - (e.clientY - rect.top) - 1;
 
-        Mouse.normalized_position = {x:(Mouse.position.x / rect.width) * 2 - 1, x:(Mouse.position.y / rect.width) * 2 - 1}
+        Mouse.normalized_position = {x:(Mouse.position.x / rect.width) * 2 - 1, y:(Mouse.position.y / rect.height) * 2 - 1}
     }
     static OnMouseClick(e){
         var button = e.button;
@@ -40,6 +42,7 @@ export default class Mouse{
         
         Mouse.buttons[button] = 2;
         Mouse.buttons_to_update.push({"button":button});
+        UI.OnMouseButtonClick(button);
     }
 
     static OnMouseRelease(e){

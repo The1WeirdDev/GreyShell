@@ -78,7 +78,7 @@ export default class Game {
 
     Game.frame = new Frame(-0.5, 0, 0.25, 0.25);
     Game.frame.SetSizeConstraint(SizeConstraint.ReverseAspectX);
-    Game.frame.AddnMouseButtonClickEvent(0, ()=>{console.log("Hello")});
+    Game.frame.AddMouseButtonClickEvent(0, ()=>{console.log("Hello")});
 
     Game.entity = new Entity();
     Keyboard.Init();
