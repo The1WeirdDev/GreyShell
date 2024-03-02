@@ -3,6 +3,7 @@ import { SizeConstraint } from "/utils/Webgl/Display/UI/UI.js";
 import { WrapMode } from "/utils/Webgl/Display/UI/UI.js";
 import Display from "/utils/Webgl/Display/Display.js";
 import Texture from "/utils/Webgl/Display/Texture.js";
+import { TextAlignMode } from "/utils/Webgl/Display/UI/UI.js";
 
 export default class UIRenderer {
   static GetSizeWithConstraint(width, height, constraint) {
@@ -78,16 +79,12 @@ export default class UIRenderer {
     UI.frame_shader.LoadFloat(UI.frame_shader.opacity_location, frame.opacity);
     UI.textured_mesh.Draw();
   }
-  static DrawTextLabel(text_label) {
-    //Draw Text
-    UI.text_label_shader.Start();
-    var font_size = 0.08;
+
+  static MeasureTextWidth(text_label){
     var x = 0;
-    var y = text_label.height - font_size;
-    //Size
     var font_constrained_size = UIRenderer.GetSizeWithConstraint(
-      font_size,
-      font_size,
+      text_label.font_size,
+      text_label.font_size,
       SizeConstraint.ReverseAspectX,
     );
     var display_ratio = UIRenderer.GetRatioFromConstraint(
@@ -99,7 +96,50 @@ export default class UIRenderer {
       text_label.height,
       text_label.constraint,
     );
+    var size = 0;
+    for(var i = 0; i < text_label.text.length; i++){
+      var char_code = text_label.text[i].charCodeAt(0);
+      var texture = Texture.text_textures[char_code];
+      var character_size_ratio = texture.width / texture.height;
+      var character_size = character_size_ratio * text_label.font_size * display_ratio;
 
+      if(size + character_size > text_label.width)
+        break;
+
+      size+= character_size;
+    }
+
+    return size;
+  }
+  static DrawTextLabel(text_label) {
+    //Draw Text
+
+    //Get Font Size
+    var font_constrained_size = UIRenderer.GetSizeWithConstraint(
+      text_label.font_size,
+      text_label.font_size,
+      SizeConstraint.ReverseAspectX,
+    );
+    var display_ratio = UIRenderer.GetRatioFromConstraint(
+      SizeConstraint.ReverseAspectX,
+    );
+
+    //Get the real size in the coordinate space of the text label size
+    var real_container_size = UIRenderer.GetSizeWithConstraint(
+      text_label.width,
+      text_label.height,
+      text_label.constraint,
+    );
+    
+    var x = 0;
+    var y = text_label.height - text_label.font_size;
+    switch(text_label.text_align){
+      case TextAlignMode.Middle:
+        x=(text_label.width - UIRenderer.MeasureTextWidth(text_label)) / 2;
+    }
+
+    //Prepare the mesh
+    UI.text_label_shader.Start();
     UI.textured_mesh.PrepareBuffers();
     for (var i = 0; i < text_label.text.length; i++) {
       //Get Character Texture
@@ -107,13 +147,13 @@ export default class UIRenderer {
       var texture = Texture.text_textures[char_code];
       texture.Bind();
 
-      if (x + font_size * display_ratio > real_container_size[0]) {
+      if (x +  text_label.font_size * display_ratio > real_container_size[0]) {
         //Checks for Wrapping
         var should_break = false;
         switch (text_label.wrap_mode) {
           case WrapMode.WrapAround:
             x = 0;
-            y -= font_size;
+            y -= text_label.font_size;
             break;
           default:
             should_break = true;
@@ -122,7 +162,7 @@ export default class UIRenderer {
         if(should_break)break;
       }
 
-      if (y - font_size < -font_size) {
+      if (y - text_label.font_size < - text_label.font_size) {
         if (text_label.clip_descendents) break;
       }
       UI.text_label_shader.LoadVector2Array(
@@ -130,7 +170,7 @@ export default class UIRenderer {
         [x + text_label.position[0], y + text_label.position[1]],
       );
       var character_size_ratio = texture.width / texture.height;
-      x += character_size_ratio * font_size * display_ratio;
+      x += character_size_ratio * text_label.font_size * display_ratio;
       var character_size = [
         font_constrained_size[0] * character_size_ratio,
         font_constrained_size[1],
@@ -142,7 +182,6 @@ export default class UIRenderer {
       );
       UI.textured_mesh.DrawWithoutPreperations();
     }
-
     //Draw Background
     UIRenderer.DrawFrame(text_label);
   }

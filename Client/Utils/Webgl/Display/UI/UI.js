@@ -20,6 +20,11 @@ export const SizeConstraint = {
   ReverseAspectY: 4, //Y Gets multiplier by aspect ratio
 };
 
+export const TextAlignMode={
+  None:0,
+  Middle:1
+}
+
 export default class UI {
   static uis = [];
   static ui_amounts = 0;

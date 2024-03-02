@@ -87,9 +87,9 @@ export default class Game {
     Keyboard.Init();
     Mouse.Init();
     Game.AddEventListeners();
+    Time.Init();
     SceneManager.AddScene(new MainMenuScene());
     SceneManager.Init();
-    Time.Init();
 
     Globals.gl.activeTexture(Globals.gl.TEXTURE0);
   }
