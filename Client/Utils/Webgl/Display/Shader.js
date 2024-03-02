@@ -59,6 +59,9 @@ export default class Shader {
     return Globals.gl.getUniformLocation(this.program_id, name);
   }
 
+  LoadFloat(location, value) {
+    Globals.gl.uniform1f(location, value);
+  }
   LoadMatrix4x4(location, value) {
     Globals.gl.uniformMatrix4fv(location, false, value);
   }

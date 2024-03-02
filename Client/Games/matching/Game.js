@@ -2,11 +2,15 @@ const div1 = document.getElementById("div1");
 const div2 = document.getElementById("div2");
 const div3 = document.getElementById("div3");
 const div4 = document.getElementById("div4");
-const correct_image = document.getElementById("CORRECT");
+const status_image = document.getElementById("STATUS");
 
 const word = document.getElementById("GAMEHEADER");
+const correct_src = "/games/matching/Images/Checkmark.jpg";
+const wrong_src = "/games/matching/Images/WRONG.png";
 
-const base_flashcard = {
+var current_flashcards = null;
+
+var base_flashcard = {
   word: "Verde",
   correct_choice: 1,
 
@@ -17,6 +21,8 @@ const base_flashcard = {
     ["Red", "/games/matching/Images/Red.png"],
   ],
 };
+
+var base_flashcards = [base_flashcard];
 var ids = 0;
 var current_flashcard = null;
 class GameButton {
@@ -52,11 +58,13 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 function OnGameImageClicked(id) {
-  correct_image.style.display = "block";
+  status_image.style.display = "block";
   if (id == current_flashcard.correct_choice) {
     console.log("Correct");
+    status_image.src = correct_src;
   } else {
     console.log("WRONG");
+    status_image.src = wrong_src;
   }
 
   for (var i = 0; i < 4; i++) {
@@ -78,7 +86,7 @@ var buttons = [game_button_1, game_button_2, game_button_3, game_button_4];
 function ShuffleArray(array) {}
 
 function SetFlashcard(flashcard) {
-  correct_image.style.display = "none";
+  status_image.style.display = "none";
   current_flashcard = flashcard;
   var array = buttons;
   ShuffleArray(array);
@@ -91,4 +99,8 @@ function SetFlashcard(flashcard) {
   }
 }
 
-SetFlashcard(base_flashcard);
+function Start(flashcard_set) {
+  current_flashcards = flashcard_set;
+  SetFlashcard(current_flashcards[0]);
+}
+Start(base_flashcards);

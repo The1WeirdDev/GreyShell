@@ -7,19 +7,26 @@ export default class Display {
     Display.canvas = canvas;
     Display.canvas.width = 1280;
     Display.canvas.height = 720;
-    Globals.gl = canvas.getContext("webgl2");
+    Globals.gl = canvas.getContext("webgl2", {
+      premultipliedAlpha: false, // Ask for non-premultiplied alpha
+      alpha: true,
+    });
 
     Display.OnResized(Display.canvas.width, Display.canvas.height);
 
     Globals.gl.enable(Globals.gl.DEPTH_TEST);
 
-    Display.SetBackgroundColor(0, 0, 0);
+    Display.SetBackgroundColor(0, 1, 0);
 
-    Display.canvas.oncontextmenu = (e)=>{e.preventDefault();}
-    Display.canvas.onselectstart = function(){return false;}
+    Display.canvas.oncontextmenu = (e) => {
+      e.preventDefault();
+    };
+    Display.canvas.onselectstart = function () {
+      return false;
+    };
   }
 
-  static GetBoundingClientRect(){
+  static GetBoundingClientRect() {
     return Display.canvas.getBoundingClientRect();
   }
   static GetAspectRatio() {
@@ -31,6 +38,11 @@ export default class Display {
   }
   static SetBackgroundColor(red, green, blue) {
     Globals.gl.clearColor(red, green, blue, 1);
+  }
+
+  static EnableAlpha() {
+    Globals.gl.enable(Globals.gl.BLEND);
+    Globals.gl.blendFunc(Globals.gl.SRC_ALPHA, Globals.gl.ONE_MINUS_SRC_ALPHA);
   }
 
   static OnResized(width, height) {

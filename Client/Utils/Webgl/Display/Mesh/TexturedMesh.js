@@ -51,6 +51,7 @@ export default class TexturedMesh {
     this.index_count = indices.length;
   }
 
+  //Your job to render the texture
   Draw() {
     Globals.gl.bindVertexArray(this.vao_object);
     Globals.gl.bindBuffer(Globals.gl.ARRAY_BUFFER, this.vbo_buffer);

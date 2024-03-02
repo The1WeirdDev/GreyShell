@@ -10,6 +10,7 @@ import UIRenderer from "/utils/Webgl/Display/UI/UIRenderer.js";
 import { SizeConstraint } from "/utils/Webgl/Display/UI/UI.js";
 import Frame from "/utils/Webgl/Display/UI/Frame.js";
 import TexturedFrame from "/utils/Webgl/Display/UI/TexturedFrame.js";
+import TextLabel from "/utils/Webgl/Display/UI/TextLabel.js";
 
 import Entity from "/games/1v1shooter/Scripts/Entities/Entity.js";
 
@@ -45,11 +46,14 @@ var fragment_data = `
 export default class Game {
   static Init() {
     Display.Init(document.getElementById("GameCanvas"));
+    Display.EnableAlpha();
+
+    Texture.CreateTextTextures();
     Game.mesh = new TexturedMesh();
     Game.mesh.Create(
       [0, 0, -5, 0, 1, -5, 1, 0, -5, 1, 1, -5],
       [0, 1, 2, 2, 1, 3],
-      [0, 0, 0, 1, 1, 0, 1, 1],
+      [1, 1, 1, 0, 0, 1, 0, 0],
       3,
     );
 
@@ -72,13 +76,31 @@ export default class Game {
       100.0,
     );
 
+    Game.text_label = new TextLabel(
+      0,
+      0,
+      0.2125,
+      0.25,
+      "Hello. My Name is ben.",
+    );
+    Game.text_label.SetBackgroundColorRGB(0, 0, 0);
+    Game.text_label.SetSizeConstraint(SizeConstraint.ReverseAspectX);
+
+    Game.text_label.AddMouseButtonClickEvent(0, () => {
+      console.log("HELLO");
+    });
+
+    Game.text_label2 = new TextLabel(0, 0, 0.5, 0.3, "NOI.");
+    Game.text_label2.SetBackgroundColorRGB(0, 255, 0);
+    Game.text_label2.SetSizeConstraint(SizeConstraint.ReverseAspectX);
+
     Game.view_matrix = mat4.create();
     mat4.translate(Game.view_matrix, Game.view_matrix, [0, 0, -15]);
     UI.Init();
 
-    Game.frame = new Frame(-0.5, 0, 0.25, 0.25);
+    Game.frame = new Frame(0, 0, 0.25, 0.25);
+    Game.frame.SetBackgroundColorRGB(255, 0, 0);
     Game.frame.SetSizeConstraint(SizeConstraint.ReverseAspectX);
-    Game.frame.AddMouseButtonClickEvent(0, ()=>{console.log("Hello")});
 
     Game.entity = new Entity();
     Keyboard.Init();
@@ -87,36 +109,38 @@ export default class Game {
     Time.Init();
   }
 
-  static AddEventListeners(){
+  static AddEventListeners() {
     document.addEventListener("mouseover", (event) => {
       Keyboard.OnMouseEnter();
     });
-  
+
     document.addEventListener("mouseleave", (event) => {
       Keyboard.OnFocusLost();
     });
 
-    document.addEventListener("keydown", (event)=>{
+    document.addEventListener("keydown", (event) => {
       Keyboard.OnKeyPress(event);
-    })
-    
-    document.addEventListener("keyup", (event)=>{
+    });
+
+    document.addEventListener("keyup", (event) => {
       Keyboard.OnKeyRelease(event);
     });
 
-    document.addEventListener("focusout", ()=>{
+    document.addEventListener("focusout", () => {
       Keyboard.OnFocusLost();
     });
 
-    document.addEventListener("mousedown", (e)=>{
+    document.addEventListener("mousedown", (e) => {
       Mouse.OnMouseClick(e);
     });
-    
-    document.addEventListener("mouseup", (e)=>{
+
+    document.addEventListener("mouseup", (e) => {
       Mouse.OnMouseRelease(e);
     });
 
-    document.querySelector("canvas").addEventListener("mousemove",(e)=>{Mouse.OnMouseMove(e);});
+    document.querySelector("canvas").addEventListener("mousemove", (e) => {
+      Mouse.OnMouseMove(e);
+    });
   }
 
   static Update() {
@@ -134,19 +158,23 @@ export default class Game {
 
   static Draw() {
     Display.Update();
+
+    Globals.gl.activeTexture(Globals.gl.TEXTURE0);
+
     Game.shader.Start();
     Game.shader.LoadMatrix4x4(
       Game.projection_matrix_location,
       Game.proj_matrix,
     );
     Game.shader.LoadMatrix4x4(Game.view_matrix_location, Game.view_matrix);
-    Globals.gl.activeTexture(Globals.gl.TEXTURE0);
-    Game.normal_texture.Bind();
+    //Game.normal_texture.Bind();
     Game.mesh.Draw();
     Game.shader.Stop();
 
     //Drawing UI
     Display.ClearDepthBuffer();
+    //UIRenderer.DrawTextLabel(Game.text_label);
+    UIRenderer.DrawTextLabel(Game.text_label2);
     UIRenderer.DrawFrame(Game.frame);
   }
 

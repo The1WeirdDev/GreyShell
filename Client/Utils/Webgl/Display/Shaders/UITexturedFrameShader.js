@@ -21,9 +21,10 @@ export default class UITexturedFrameShader extends Shader {
 
 		varying vec2 _texture_coord;
 		uniform sampler2D textureID;
+		uniform float opacity;
 
 		void main() {
-			gl_FragColor = texture2D(textureID, _texture_coord);
+			gl_FragColor = texture2D(textureID, _texture_coord) * vec4(1,1,1,opacity);
 		}
 	`;
   constructor() {
@@ -37,5 +38,6 @@ export default class UITexturedFrameShader extends Shader {
     );
     this.position_location = this.GetUniformLocation("frame_position");
     this.size_location = this.GetUniformLocation("size");
+    this.opacity_location = this.GetUniformLocation("opacity");
   }
 }
