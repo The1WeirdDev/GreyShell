@@ -112,8 +112,6 @@ export default class UIRenderer {
     return size;
   }
   static DrawTextLabel(text_label) {
-    //Draw Text
-
     //Get Font Size
     var font_constrained_size = UIRenderer.GetSizeWithConstraint(
       text_label.font_size,
@@ -169,7 +167,7 @@ export default class UIRenderer {
         UI.text_label_shader.position_location,
         [x + text_label.position[0], y + text_label.position[1]],
       );
-      var character_size_ratio = texture.width / texture.height;
+      var character_size_ratio = texture.aspect_ratio;
       x += character_size_ratio * text_label.font_size * display_ratio;
       var character_size = [
         font_constrained_size[0] * character_size_ratio,

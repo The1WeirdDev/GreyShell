@@ -6,6 +6,7 @@ export default class Texture {
   constructor() {
     this.width = 1;
     this.height = 1;
+    this.aspect_ratio = 1;
     this.texture = null;
   }
 
@@ -63,6 +64,9 @@ export default class Texture {
         srcType,
         image,
       );
+      this.width = image.width;
+      this.height= image.height;
+      this.aspect_ratio = this.width / this.height;;
 
       Globals.gl.texParameteri(
         gl.TEXTURE_2D,
@@ -94,6 +98,7 @@ export default class Texture {
     var texture = new Texture();
     texture.width = Texture.text_canvas.width;
     texture.height = Texture.text_canvas.height;
+    texture.aspect_ratio = texture.width / texture.height;
 
     texture.texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture.texture);

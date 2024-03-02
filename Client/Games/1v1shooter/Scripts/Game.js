@@ -88,8 +88,11 @@ export default class Game {
     Mouse.Init();
     Game.AddEventListeners();
     Time.Init();
+
     SceneManager.AddScene(new MainMenuScene());
     SceneManager.Init();
+
+    Display.SetBackgroundColor(0, 0.8, 1);
 
     Globals.gl.activeTexture(Globals.gl.TEXTURE0);
   }

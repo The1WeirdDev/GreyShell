@@ -16,7 +16,7 @@ export default class Display {
 
     Globals.gl.enable(Globals.gl.DEPTH_TEST);
 
-    Display.SetBackgroundColor(0, 1, 0);
+    Display.SetBackgroundColor(0, 0, 0);
 
     Display.canvas.oncontextmenu = (e) => {
       e.preventDefault();
