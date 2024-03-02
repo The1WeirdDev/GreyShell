@@ -19,6 +19,10 @@ import MatrixUtils from "/utils/Utils/MatrixUtils.js";
 import Keyboard from "/utils/Utils/Input/Keyboard.js";
 import Mouse from "/utils/Utils/Input/Mouse.js";
 
+import MainMenuScene from "/games/1v1shooter/Scripts/Scenes/MainMenuScene.js";
+import SceneManager from "/utils/Scene/SceneManager.js";
+import Scene from "/utils/Scene/Scene.js";
+
 var vertex_data = `
 			precision mediump float;
 			attribute vec3 position;
@@ -63,8 +67,8 @@ export default class Game {
     Game.shader = new Shader();
     Game.shader.CreateShaders(vertex_data, fragment_data);
     Game.shader.BindAttribute(0, "position");
-    Game.projection_matrix_location =
-      Game.shader.GetUniformLocation("projection_matrix");
+
+    Game.projection_matrix_location = Game.shader.GetUniformLocation("projection_matrix");
     Game.view_matrix_location = Game.shader.GetUniformLocation("view_matrix");
 
     Game.proj_matrix = mat4.create();
@@ -76,37 +80,18 @@ export default class Game {
       100.0,
     );
 
-    Game.text_label = new TextLabel(
-      0,
-      0,
-      0.2125,
-      0.25,
-      "Hello. My Name is ben.",
-    );
-    Game.text_label.SetBackgroundColorRGB(0, 0, 0);
-    Game.text_label.SetSizeConstraint(SizeConstraint.ReverseAspectX);
-
-    Game.text_label.AddMouseButtonClickEvent(0, () => {
-      console.log("HELLO");
-    });
-
-    Game.text_label2 = new TextLabel(0, 0, 0.5, 0.3, "NOI.");
-    Game.text_label2.SetBackgroundColorRGB(0, 255, 0);
-    Game.text_label2.SetSizeConstraint(SizeConstraint.ReverseAspectX);
-
     Game.view_matrix = mat4.create();
-    mat4.translate(Game.view_matrix, Game.view_matrix, [0, 0, -15]);
     UI.Init();
-
-    Game.frame = new Frame(0, 0, 0.25, 0.25);
-    Game.frame.SetBackgroundColorRGB(255, 0, 0);
-    Game.frame.SetSizeConstraint(SizeConstraint.ReverseAspectX);
 
     Game.entity = new Entity();
     Keyboard.Init();
     Mouse.Init();
     Game.AddEventListeners();
+    SceneManager.AddScene(new MainMenuScene());
+    SceneManager.Init();
     Time.Init();
+
+    Globals.gl.activeTexture(Globals.gl.TEXTURE0);
   }
 
   static AddEventListeners() {
@@ -145,38 +130,35 @@ export default class Game {
 
   static Update() {
     Time.Update();
-    Game.entity.Update();
 
-    //Game.entity.rotation.y += Time.delta_time;
-    Game.view_matrix = MatrixUtils.GenerateViewMatrix(
-      Game.entity.position,
-      Game.entity.rotation,
-    );
+    SceneManager.Update();
+
     Keyboard.LateUpdate();
     Mouse.LateUpdate();
   }
 
   static Draw() {
     Display.Update();
+    Game.shader.Start();
+    Game.shader.LoadMatrix4x4(Game.view_matrix_location, Game.view_matrix);
+    Game.mesh.Draw();
+    Game.shader.Stop();
+    SceneManager.Draw();
 
-    Globals.gl.activeTexture(Globals.gl.TEXTURE0);
+    //Drawing UI
+    Display.ClearDepthBuffer();
+    SceneManager.LateDraw();
+  }
 
+  static CleanUp() {
+    SceneManager.CleanUp();
+  }
+
+  static LoadProjectionMatrix(e){
     Game.shader.Start();
     Game.shader.LoadMatrix4x4(
       Game.projection_matrix_location,
       Game.proj_matrix,
     );
-    Game.shader.LoadMatrix4x4(Game.view_matrix_location, Game.view_matrix);
-    //Game.normal_texture.Bind();
-    Game.mesh.Draw();
-    Game.shader.Stop();
-
-    //Drawing UI
-    Display.ClearDepthBuffer();
-    //UIRenderer.DrawTextLabel(Game.text_label);
-    UIRenderer.DrawTextLabel(Game.text_label2);
-    UIRenderer.DrawFrame(Game.frame);
   }
-
-  static CleanUp() {}
 }

@@ -33,8 +33,15 @@ export default class Entity {
       this.position.z += Math.cos(this.rotation.y - 1.5708) * Time.delta_time;
     }
 
-    //this.rotation.y += Mouse.delta.x * 0.0174533;
-    //this.rotation.z -= Mouse.delta.y * 0.0174533;
+    if(Keyboard.IsKeyDown(32)){
+      this.position.y += Time.delta_time;
+    }
+    if(Keyboard.IsKeyDown(16)){
+      this.position.y -= Time.delta_time;
+    }
+
+    this.rotation.y += Mouse.delta.x * 0.0174533;
+    this.rotation.z -= Mouse.delta.y * 0.0174533;
 
     this.rotation.z = Mathf.Clamp(this.rotation.z, -1.5708, 1.5708);
   }

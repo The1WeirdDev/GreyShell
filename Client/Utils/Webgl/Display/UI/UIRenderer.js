@@ -99,6 +99,8 @@ export default class UIRenderer {
       text_label.height,
       text_label.constraint,
     );
+
+    UI.textured_mesh.PrepareBuffers();
     for (var i = 0; i < text_label.text.length; i++) {
       //Get Character Texture
       var char_code = text_label.text[i].charCodeAt(0);
@@ -107,14 +109,17 @@ export default class UIRenderer {
 
       if (x + font_size * display_ratio > real_container_size[0]) {
         //Checks for Wrapping
+        var should_break = false;
         switch (text_label.wrap_mode) {
           case WrapMode.WrapAround:
             x = 0;
             y -= font_size;
             break;
           default:
-            return;
+            should_break = true;
         }
+
+        if(should_break)break;
       }
 
       if (y - font_size < -font_size) {
@@ -135,7 +140,7 @@ export default class UIRenderer {
         UI.text_label_shader.size_location,
         character_size,
       );
-      UI.textured_mesh.Draw();
+      UI.textured_mesh.DrawWithoutPreperations();
     }
 
     //Draw Background

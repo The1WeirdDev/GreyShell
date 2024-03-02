@@ -18,6 +18,7 @@ export default class Mesh {
       Globals.gl.STATIC_DRAW,
     );
 
+    Globals.gl.enableVertexAttribArray(0);
     Globals.gl.vertexAttribPointer(
       0,
       dimensions,
@@ -46,18 +47,29 @@ export default class Mesh {
     Globals.gl.bindBuffer(Globals.gl.ARRAY_BUFFER, this.vbo_buffer);
     Globals.gl.bindBuffer(Globals.gl.ELEMENT_ARRAY_BUFFER, this.ebo_buffer);
 
-    Globals.gl.enableVertexAttribArray(0);
     Globals.gl.drawElements(
       Globals.gl.TRIANGLES,
       this.index_count,
       Globals.gl.UNSIGNED_SHORT,
       0,
     );
-    Globals.gl.disableVertexAttribArray(0);
 
     Globals.gl.bindBuffer(Globals.gl.ARRAY_BUFFER, null);
     Globals.gl.bindBuffer(Globals.gl.ELEMENT_ARRAY_BUFFER, null);
     Globals.gl.bindVertexArray(null);
+  }
+  PrepareBuffers(){
+    Globals.gl.bindVertexArray(this.vao_object);
+    Globals.gl.bindBuffer(Globals.gl.ARRAY_BUFFER, this.vbo_buffer);
+    Globals.gl.bindBuffer(Globals.gl.ELEMENT_ARRAY_BUFFER, this.ebo_buffer);
+  }
+  DrawWithoutPreperations(){
+    Globals.gl.drawElements(
+      Globals.gl.TRIANGLES,
+      this.index_count,
+      Globals.gl.UNSIGNED_SHORT,
+      0,
+    );
   }
   CleanUp() {
     Globals.gl.deleteVertexArray(this.vao_object);

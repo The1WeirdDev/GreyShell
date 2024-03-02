@@ -62,6 +62,10 @@ export default class UI {
     this.background_color = [1, 1, 1];
   }
 
+  CleanUp(){
+    this.RemoveFromUIList(this);
+  }
+
   SetSizeConstraint(size_constraint) {
     this.constraint = size_constraint;
   }
@@ -70,7 +74,7 @@ export default class UI {
     this.background_color = [red / 255, green / 255, blue / 255];
   }
 
-  RemoveFromUILists(do_not_remove_children) {
+  RemoveFromUIList(do_not_remove_children) {
     for (var i = 0; i < UI.uis.length; i++) {
       if (UI.uis[i].id == this.id) {
         if (do_not_remove_children != true) {

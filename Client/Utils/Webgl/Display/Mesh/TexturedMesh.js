@@ -1,6 +1,6 @@
 import Globals from "/utils/Webgl/Globals.js";
-
-export default class TexturedMesh {
+import Mesh from "/utils/Webgl/Display/Mesh/Mesh.js"
+export default class TexturedMesh extends Mesh{
   Create(vertices, indices, texture_coords, dimensions) {
     const gl = Globals.gl;
 
