@@ -80,8 +80,9 @@ export default class UIRenderer {
     UI.textured_mesh.Draw();
   }
 
-  static MeasureTextWidth(text_label){
+  static MeasureTextSize(text_label){
     var x = 0;
+    var y = 0;
     var font_constrained_size = UIRenderer.GetSizeWithConstraint(
       text_label.font_size,
       text_label.font_size,
@@ -96,17 +97,17 @@ export default class UIRenderer {
       text_label.height,
       text_label.constraint,
     );
-    var size = 0;
+    var size = [0,0];
     for(var i = 0; i < text_label.text.length; i++){
       var char_code = text_label.text[i].charCodeAt(0);
       var texture = Texture.text_textures[char_code];
       var character_size_ratio = texture.width / texture.height;
       var character_size = character_size_ratio * text_label.font_size * display_ratio;
 
-      if(size + character_size > text_label.width)
-        break;
-
-      size+= character_size;
+      if(size[0] + character_size < text_label.width){
+        size[0] += character_size;
+      }
+      size[1] = text_label.font_size
     }
 
     return size;
@@ -130,10 +131,17 @@ export default class UIRenderer {
     );
     
     var x = 0;
-    var y = text_label.height - text_label.font_size;
+    var y = 0;
+    var measured_size = UIRenderer.MeasureTextSize(text_label);
+    
     switch(text_label.text_align){
       case TextAlignMode.Middle:
-        x=(text_label.width - UIRenderer.MeasureTextWidth(text_label)) / 2;
+        x=(text_label.width - measured_size[0]) / 2;
+        break;
+      case TextAlignMode.Center:
+        x =(text_label.width - measured_size[0]) / 2;
+        y = (text_label.height - measured_size[1]) / 2;
+        break;
     }
 
     //Prepare the mesh

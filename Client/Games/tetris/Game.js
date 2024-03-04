@@ -44,6 +44,7 @@ class TetrisPiece {
     if (this.AttemptMove(0, 1) == false) {
       this.debounce_frames--;
       if (this.debounce_frames <= 0) {
+        this.PlacePiece();
         this.x = Math.floor((game_size_x - 1) / 2);
         this.y = 0;
       }
@@ -64,16 +65,25 @@ class TetrisPiece {
     }
   }
 
-  PlacePiece() {
+  DropPiece() {
     while (true) {
       if (this.AttemptMove(0, 1) == false) break;
+    }
+  }
+
+  PlacePiece(){
+    for (var i = 0; i < 8; i += 2) {
+      var x = this.block_data[i] + this.x;
+      var y = this.block_data[i + 1] + this.y;
+
+      map[(y * game_size_x) + x] = this.color;
     }
   }
   OnKeyDown(e) {
     if (e.repeat) return;
     var key_code = e.keyCode;
 
-    if (key_code == 32) this.PlacePiece();
+    if (key_code == 32) this.DropPiece();
 
     if (key_code == 65) this.move_dir = -1;
     if (key_code == 68) this.move_dir = 1;
@@ -139,6 +149,7 @@ function Draw() {
         block_size,
         block_size,
         GetColorFromBlockId(GetBlock(x, y)),
+        true
       );
     }
   }

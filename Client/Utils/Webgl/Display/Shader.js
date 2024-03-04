@@ -66,6 +66,14 @@ export default class Shader {
     Globals.gl.uniformMatrix4fv(location, false, value);
   }
 
+  LoadVector2(location, v1, v2){
+    Globals.gl.uniform2f(location, v1, v2);
+  }
+  
+  LoadVector3(location, v1, v2, v3){
+    Globals.gl.uniform3f(location, v1, v2, v3);
+  }
+
   LoadVector2Array(location, value) {
     Globals.gl.uniform2f(location, value[0], value[1]);
   }

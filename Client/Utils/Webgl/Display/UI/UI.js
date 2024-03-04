@@ -1,7 +1,7 @@
 import TexturedMesh from "/utils/Webgl/Display/Mesh/TexturedMesh.js";
-import UIFrameShader from "/utils/Webgl/Display/Shaders/UIFrameShader.js";
-import UITexturedFrameShader from "/utils/Webgl/Display/Shaders/UITexturedFrameShader.js";
-import UITextLabelShader from "/utils/Webgl/Display/Shaders/UITextLabelShader.js";
+import UIFrameShader from "/utils/Webgl/Display/Shaders/UI/UIFrameShader.js";
+import UITexturedFrameShader from "/utils/Webgl/Display/Shaders/UI/UITexturedFrameShader.js";
+import UITextLabelShader from "/utils/Webgl/Display/Shaders/UI/UITextLabelShader.js";
 import Display from "/utils/Webgl/Display/Display.js";
 import Mouse from "/utils/Utils/Input/Mouse.js";
 import UIRenderer from "/utils/Webgl/Display/UI/UIRenderer.js";
@@ -22,7 +22,8 @@ export const SizeConstraint = {
 
 export const TextAlignMode={
   None:0,
-  Middle:1
+  Middle:1,
+  Center:2
 }
 
 export default class UI {

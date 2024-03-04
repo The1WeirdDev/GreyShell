@@ -22,6 +22,7 @@ import Mouse from "/utils/Utils/Input/Mouse.js";
 import MainMenuScene from "/games/1v1shooter/Scripts/Scenes/MainMenuScene.js";
 import SceneManager from "/utils/Scene/SceneManager.js";
 import Scene from "/utils/Scene/Scene.js";
+import OBJParser from "/utils/Parsers/OBJParser.js";
 
 var vertex_data = `
 			precision mediump float;
@@ -54,12 +55,6 @@ export default class Game {
 
     Texture.CreateTextTextures();
     Game.mesh = new TexturedMesh();
-    Game.mesh.Create(
-      [0, 0, -5, 0, 1, -5, 1, 0, -5, 1, 1, -5],
-      [0, 1, 2, 2, 1, 3],
-      [1, 1, 1, 0, 0, 1, 0, 0],
-      3,
-    );
 
     Game.normal_texture = new Texture();
     Game.normal_texture.LoadTexture("/games/matching/Images/Purple.png");
@@ -71,6 +66,10 @@ export default class Game {
     Game.projection_matrix_location = Game.shader.GetUniformLocation("projection_matrix");
     Game.view_matrix_location = Game.shader.GetUniformLocation("view_matrix");
 
+    OBJParser.ReadURLAsOBJMeshData("/games/1v1shooter/Res/Meshes/Cube.obj", (data)=>{
+      console.log(data);
+      Game.mesh.Create(data.vertices, data.indices, data.texture_coords, 3);
+    });
     Game.proj_matrix = mat4.create();
     Game.proj_matrix = mat4.perspective(
       Game.proj_matrix,
@@ -144,7 +143,7 @@ export default class Game {
     Display.Update();
     Game.shader.Start();
     Game.shader.LoadMatrix4x4(Game.view_matrix_location, Game.view_matrix);
-    Game.mesh.Draw();
+    //Game.mesh.Draw();
     Game.shader.Stop();
     SceneManager.Draw();
 

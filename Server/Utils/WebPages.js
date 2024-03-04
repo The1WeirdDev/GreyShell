@@ -6,6 +6,10 @@ class WebPages {
       case "matching":
       case "tetris":
       case "snake2":
+      case "fnaf4":
+      case "fnaf3":
+      case "fnaf2":
+      case "fnaf1":
         return true;
       default:
         return false;
