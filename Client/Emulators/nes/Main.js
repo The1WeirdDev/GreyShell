@@ -21,7 +21,7 @@ function Init() {
 }
 
 function Update() {
-  //nes.Clock();
+  nes.Clock();
 }
 
 Init();

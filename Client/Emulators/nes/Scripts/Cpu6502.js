@@ -158,6 +158,9 @@ export default class Cpu6502 {
       case 0xa2:
         this.LDX(addressing_modes.Immediate);
         break;
+      case 0xad:
+        this.LDA(addressing_modes.Absolute);
+        break;
       case 0xa9:
         this.LDA(addressing_modes.Immediate);
         break;
@@ -235,7 +238,6 @@ export default class Cpu6502 {
   Branch() {
     var offset = this.GetImmediate();
     if (offset >> 7 == 1) {
-      console.log("N");
       this.pc.Add(ToSignedInt(offset) + 2);
     } else {
       this.pc.Add((offset & 0x7f) + 2);
@@ -340,6 +342,10 @@ export default class Cpu6502 {
         this.a.Set(this.GetImmediate());
         this.pc.Add(2);
         break;
+      case addressing_modes.Absolute:
+        this.a.Set(this.GetMemVal(this.GetAbsoluteAddress()));
+        this.pc.Add(3);
+        break;
     }
   }
 
@@ -353,6 +359,6 @@ export default class Cpu6502 {
   }
   TXS() {
     this.sp.Set(this.GetImmediate());
-    this.pc.Add(2);
+    this.pc.Add(1);
   }
 }
