@@ -49,118 +49,121 @@ var fragment_data = `
 `;
 
 export default class Game {
-  static Init() {
-    Display.Init(document.getElementById("GameCanvas"));
-    Display.EnableAlpha();
+	static Init() {
+		Display.Init(document.getElementById("GameCanvas"));
+		Display.EnableAlpha();
 
-    Texture.CreateTextTextures();
-    Game.mesh = new TexturedMesh();
+		Texture.CreateTextTextures();
+		Game.mesh = new TexturedMesh();
 
-    Game.normal_texture = new Texture();
-    Game.normal_texture.LoadTexture("/games/matching/Images/Purple.png");
+		Game.normal_texture = new Texture();
+		Game.normal_texture.LoadTexture("/games/matching/Images/Purple.png");
 
-    Game.shader = new Shader();
-    Game.shader.CreateShaders(vertex_data, fragment_data);
-    Game.shader.BindAttribute(0, "position");
+		Game.shader = new Shader();
+		Game.shader.CreateShaders(vertex_data, fragment_data);
+		Game.shader.BindAttribute(0, "position");
 
-    Game.projection_matrix_location = Game.shader.GetUniformLocation("projection_matrix");
-    Game.view_matrix_location = Game.shader.GetUniformLocation("view_matrix");
+		Game.projection_matrix_location =
+			Game.shader.GetUniformLocation("projection_matrix");
+		Game.view_matrix_location = Game.shader.GetUniformLocation("view_matrix");
 
-    OBJParser.ReadURLAsOBJMeshData("/games/1v1shooter/Res/Meshes/Cube.obj", (data)=>{
-      console.log(data);
-      Game.mesh.Create(data.vertices, data.indices, data.texture_coords, 3);
-    });
-    Game.proj_matrix = mat4.create();
-    Game.proj_matrix = mat4.perspective(
-      Game.proj_matrix,
-      1.5708,
-      Display.GetAspectRatio(),
-      0.01,
-      100.0,
-    );
+		OBJParser.ReadURLAsOBJMeshData(
+			"/games/1v1shooter/Res/Meshes/Cube.obj",
+			(data) => {
+				Game.mesh.Create(data.vertices, data.indices, data.texture_coords, 3);
+			},
+		);
+		Game.proj_matrix = mat4.create();
+		Game.proj_matrix = mat4.perspective(
+			Game.proj_matrix,
+			1.5708,
+			Display.GetAspectRatio(),
+			0.01,
+			100.0,
+		);
 
-    Game.view_matrix = mat4.create();
-    UI.Init();
+		Game.view_matrix = mat4.create();
+		UI.Init();
 
-    Game.entity = new Entity();
-    Keyboard.Init();
-    Mouse.Init();
-    Game.AddEventListeners();
-    Time.Init();
+		Game.entity = new Entity();
+		Keyboard.Init();
+		Mouse.Init();
+		Game.AddEventListeners();
+		Time.Init();
 
-    SceneManager.AddScene(new MainMenuScene());
-    SceneManager.Init();
+		SceneManager.AddScene(new MainMenuScene());
+		SceneManager.Init();
 
-    Display.SetBackgroundColor(0, 0.8, 1);
+		Display.SetBackgroundColor(0, 0.8, 1);
 
-    Globals.gl.activeTexture(Globals.gl.TEXTURE0);
-  }
+		Globals.gl.activeTexture(Globals.gl.TEXTURE0);
+	}
 
-  static AddEventListeners() {
-    document.addEventListener("mouseover", (event) => {
-      Keyboard.OnMouseEnter();
-    });
+	static AddEventListeners() {
+		document.addEventListener("mouseover", (event) => {
+			Keyboard.OnMouseEnter();
+		});
 
-    document.addEventListener("mouseleave", (event) => {
-      Keyboard.OnFocusLost();
-    });
+		document.addEventListener("mouseleave", (event) => {
+			Keyboard.OnFocusLost();
+		});
 
-    document.addEventListener("keydown", (event) => {
-      Keyboard.OnKeyPress(event);
-    });
+		document.addEventListener("keydown", (event) => {
+			Keyboard.OnKeyPress(event);
+		});
 
-    document.addEventListener("keyup", (event) => {
-      Keyboard.OnKeyRelease(event);
-    });
+		document.addEventListener("keyup", (event) => {
+			Keyboard.OnKeyRelease(event);
+		});
 
-    document.addEventListener("focusout", () => {
-      Keyboard.OnFocusLost();
-    });
+		document.addEventListener("focusout", () => {
+			Keyboard.OnFocusLost();
+		});
 
-    document.addEventListener("mousedown", (e) => {
-      Mouse.OnMouseClick(e);
-    });
+		document.addEventListener("mousedown", (e) => {
+			Mouse.OnMouseClick(e);
+		});
 
-    document.addEventListener("mouseup", (e) => {
-      Mouse.OnMouseRelease(e);
-    });
+		document.addEventListener("mouseup", (e) => {
+			Mouse.OnMouseRelease(e);
+		});
 
-    document.querySelector("canvas").addEventListener("mousemove", (e) => {
-      Mouse.OnMouseMove(e);
-    });
-  }
+		document.querySelector("canvas").addEventListener("mousemove", (e) => {
+			Mouse.OnMouseMove(e);
+		});
+	}
 
-  static Update() {
-    Time.Update();
+	static Update() {
+		Time.Update();
 
-    SceneManager.Update();
+		SceneManager.Update();
 
-    Keyboard.LateUpdate();
-    Mouse.LateUpdate();
-  }
+		Keyboard.LateUpdate();
+		Mouse.LateUpdate();
+	}
 
-  static Draw() {
-    Display.Update();
-    Game.shader.Start();
-    Game.shader.LoadMatrix4x4(Game.view_matrix_location, Game.view_matrix);
-    //Game.mesh.Draw();
-    Game.shader.Stop();
-    SceneManager.Draw();
+	static Draw() {
+		Display.Update();
+		Game.shader.Start();
+		Game.shader.LoadMatrix4x4(Game.view_matrix_location, Game.view_matrix);
+		//Game.mesh.Draw();
+		Game.shader.Stop();
+		SceneManager.Draw();
 
-    //Drawing UI
-    Display.ClearDepthBuffer();
-    SceneManager.LateDraw();
-  }
+		//Drawing UI
+		Display.ClearDepthBuffer();
+		SceneManager.LateDraw();
+	}
 
-  static CleanUp() {
-    SceneManager.CleanUp();
-  }
+	static CleanUp() {
+		SceneManager.CleanUp();
+	}
 
-  static LoadProjectionMatrix(e){
-    Game.shader.Start();
-    Game.shader.LoadMatrix4x4(
-      Game.projection_matrix_location,
-      Game.proj_matrix,
-    );
-  }
+	static LoadProjectionMatrix(e) {
+		Game.shader.Start();
+		Game.shader.LoadMatrix4x4(
+			Game.projection_matrix_location,
+			Game.proj_matrix,
+		);
+	}
 }

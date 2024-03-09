@@ -10,6 +10,7 @@ class WebPages {
       case "fnaf3":
       case "fnaf2":
       case "fnaf1":
+      case "test":
         return true;
       default:
         return false;

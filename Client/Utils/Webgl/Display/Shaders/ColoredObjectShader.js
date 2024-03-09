@@ -28,26 +28,32 @@ export default class ColoredObjectShader extends Shader {
   }
 
   Create() {
-    this.CreateShaders(ColoredObjectShader.vertex_data, ColoredObjectShader.fragment_data);
-    this.projection_matrix_location = this.GetUniformLocation("projection_matrix");
+    this.CreateShaders(
+      ColoredObjectShader.vertex_data,
+      ColoredObjectShader.fragment_data,
+    );
+    this.projection_matrix_location =
+      this.GetUniformLocation("projection_matrix");
     this.view_matrix_location = this.GetUniformLocation("view_matrix");
-    this.transformation_matrix_location = this.GetUniformLocation("transformation_matrix");
+    this.transformation_matrix_location = this.GetUniformLocation(
+      "transformation_matrix",
+    );
     this.color_location = this.GetUniformLocation("color");
   }
 
-  LoadProjectionMatrix(matrix){
+  LoadProjectionMatrix(matrix) {
     this.LoadMatrix4x4(this.projection_matrix_location, matrix);
   }
 
-  LoadViewMatrix(matrix){
+  LoadViewMatrix(matrix) {
     this.LoadMatrix4x4(this.view_matrix_location, matrix);
   }
 
-  LoadTransformationMatrix(matrix){
+  LoadTransformationMatrix(matrix) {
     this.LoadMatrix4x4(this.transformation_matrix_location, matrix);
   }
 
-  LoadColorRGB(r, g, b){
+  LoadColorRGB(r, g, b) {
     this.LoadVector3(this.color_location, r / 255, g / 255, b / 255);
   }
 }

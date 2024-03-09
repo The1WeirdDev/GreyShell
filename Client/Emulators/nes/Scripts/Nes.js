@@ -1,18 +1,23 @@
 import Cpu6502 from "/emulators/nes/Scripts/Cpu6502.js";
+import PPU from "/emulators/nes/Scripts/PPU.js";
 
 import { ToHex } from "/utils/Utils/Converters.js";
 //https://gbdev.io/pandocs/CPU_Comparison_with_Z80.html
 //https://raphaelstaebler.medium.com/memory-and-memory-mapped-i-o-of-the-gameboy-part-3-of-a-series-37025b40d89b
 export default class Nes {
   constructor() {
-    this.cpu = new Cpu6502(this);
     this.ram = new Uint8Array(64 * 1024);
-    //this.video_ram = new Uint8Array(8 * 1024);
+    //this.video_ram = new Uint8Array(8 * 1024
+
+    this.cpu = new Cpu6502(this);
+    this.ppu = new PPU(this);
+
     this.can_clock = true;
   }
 
   Reset() {
     this.cpu.Reset();
+    this.ppu.Reset();
     this.ram.fill(0, 0, this.ram.length);
     //this.video_ram.fill(0, 0, this.video_ram.length);
     this.can_clock = true;
@@ -72,5 +77,7 @@ export default class Nes {
     if (this.can_clock == false) return;
 
     this.cpu.Clock();
+
+    this.ppu.Clock();
   }
 }

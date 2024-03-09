@@ -5,8 +5,8 @@ export default class Display {
 
   static Init(canvas) {
     Display.canvas = canvas;
-    Display.canvas.width = 1280;
-    Display.canvas.height = 720;
+    Display.canvas.width = 720;
+    Display.canvas.height = Display.canvas.width * (9 / 16);
     Globals.gl = canvas.getContext("webgl2", {
       premultipliedAlpha: false, // Ask for non-premultiplied alpha
       alpha: true,
