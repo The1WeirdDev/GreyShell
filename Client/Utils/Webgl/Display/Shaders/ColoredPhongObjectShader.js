@@ -22,6 +22,8 @@ export default class ColoredPhongObjectShader extends Shader {
 	static fragment_data = `
 		precision mediump float;
 
+		#define MAX_NUM_OF_LIGHTS 10
+
 		varying vec3 frag_normals;
 		varying vec4 frag_global_position;
 		uniform vec3 color;
@@ -35,9 +37,9 @@ export default class ColoredPhongObjectShader extends Shader {
 			float quadratic;
 		};
 
-		uniform Light light_1;
+		uniform Light lights[MAX_NUM_OF_LIGHTS];
 
-		vec3 CalculateSpotLightColor(Light light){
+		vec3 CalculatePointLightColor(Light light){
 			float distance = length(light.position - frag_global_position.xyz);
 			vec3 light_direction = normalize(light.position - frag_global_position.xyz);
 			float diffuse = max(dot(frag_normals, light_direction), 0.1);
@@ -47,13 +49,19 @@ export default class ColoredPhongObjectShader extends Shader {
 		}
 
 		vec3 CalculateDirectionalLight(vec3 light_dir, vec3 light_color, float min_light_level){
-			float diffuse = max(dot(frag_normals, normalize(-light_dir)), min_light_level);
+			float diffuse = max(dot(frag_normals, normalize(vec3(light_dir.x, -light_dir.y, light_dir.z))), min_light_level);
 			return diffuse * light_color * color;
 		}
 		void main() {
-			vec3 ambient = CalculateDirectionalLight(vec3(1,-1,1), vec3(1,1,1), 0.0);
-			vec3 diffuse = CalculateSpotLightColor(light_1);
-			gl_FragColor = vec4((ambient + diffuse), 1);
+			vec3 accumulated = vec3(0.0);
+
+			//accumulated += CalculateDirectionalLight(vec3(1,-1,1), vec3(1,1,1), 0.0);
+
+			for(int i = 0; i < MAX_NUM_OF_LIGHTS; i++){
+				if(lights[i].constant != 0.0)
+					accumulated += CalculatePointLightColor(lights[i]);
+			}
+			gl_FragColor = vec4(accumulated, 1);
 		}
 	`;
 	constructor() {
@@ -72,9 +80,27 @@ export default class ColoredPhongObjectShader extends Shader {
 			"transformation_matrix",
 		);
 		this.color_location = this.GetUniformLocation("color");
+		this.light_position_loc = this.GetUniformLocation("light_1.position");
+		this.light_color_loc = this.GetUniformLocation("light_1.color");
+		this.light_constant_loc = this.GetUniformLocation("light_1.constant");
+		this.light_linear_loc = this.GetUniformLocation("light_1.linear");
+		this.light_quadratic_loc = this.GetUniformLocation("light_1.quadratic");
 
 		this.BindAttribute(0, "position");
-		//this.BindAttribute(1, "normals");
+		this.BindAttribute(1, "normals");
+
+		this.points_lights = [];
+		this.max_num_of_points_lights = 10;
+		this.points_lights_loc = this.GetUniformLocation("lights");
+		for(var i = 0; i < this.max_num_of_points_lights; i++){
+			this.points_lights[i] = {};
+			var light = this.points_lights[i];
+			light.position_loc = this.GetUniformLocation(`lights[${i}].position`);
+			light.color_loc = this.GetUniformLocation(`lights[${i}].color`);
+			light.constant_loc = this.GetUniformLocation(`lights[${i}].constant`);
+			light.linear_loc = this.GetUniformLocation(`lights[${i}].linear`);
+			light.quadratic_loc = this.GetUniformLocation(`lights[${i}].quadratic`);
+		}
 	}
 
 	LoadProjectionMatrix(matrix) {
@@ -91,5 +117,9 @@ export default class ColoredPhongObjectShader extends Shader {
 
 	LoadColorRGB(r, g, b) {
 		this.LoadVector3(this.color_location, r / 255, g / 255, b / 255);
+	}
+
+	ClearLightsBuffer(){
+		this.lights_loc.clear();
 	}
 }

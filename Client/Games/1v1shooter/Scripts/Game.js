@@ -54,25 +54,7 @@ export default class Game {
 		Display.EnableAlpha();
 
 		Texture.CreateTextTextures();
-		Game.mesh = new TexturedMesh();
 
-		Game.normal_texture = new Texture();
-		Game.normal_texture.LoadTexture("/games/matching/Images/Purple.png");
-
-		Game.shader = new Shader();
-		Game.shader.CreateShaders(vertex_data, fragment_data);
-		Game.shader.BindAttribute(0, "position");
-
-		Game.projection_matrix_location =
-			Game.shader.GetUniformLocation("projection_matrix");
-		Game.view_matrix_location = Game.shader.GetUniformLocation("view_matrix");
-
-		OBJParser.ReadURLAsOBJMeshData(
-			"/games/1v1shooter/Res/Meshes/Cube.obj",
-			(data) => {
-				Game.mesh.Create(data.vertices, data.indices, data.texture_coords, 3);
-			},
-		);
 		Game.proj_matrix = mat4.create();
 		Game.proj_matrix = mat4.perspective(
 			Game.proj_matrix,
@@ -82,10 +64,8 @@ export default class Game {
 			100.0,
 		);
 
-		Game.view_matrix = mat4.create();
 		UI.Init();
 
-		Game.entity = new Entity();
 		Keyboard.Init();
 		Mouse.Init();
 		Game.AddEventListeners();
@@ -144,10 +124,6 @@ export default class Game {
 
 	static Draw() {
 		Display.Update();
-		Game.shader.Start();
-		Game.shader.LoadMatrix4x4(Game.view_matrix_location, Game.view_matrix);
-		//Game.mesh.Draw();
-		Game.shader.Stop();
 		SceneManager.Draw();
 
 		//Drawing UI
@@ -157,13 +133,5 @@ export default class Game {
 
 	static CleanUp() {
 		SceneManager.CleanUp();
-	}
-
-	static LoadProjectionMatrix(e) {
-		Game.shader.Start();
-		Game.shader.LoadMatrix4x4(
-			Game.projection_matrix_location,
-			Game.proj_matrix,
-		);
 	}
 }

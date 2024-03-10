@@ -5,7 +5,7 @@ export default class Display {
 
   static Init(canvas) {
     Display.canvas = canvas;
-    Display.canvas.width = 720;
+    Display.canvas.width = 1200;
     Display.canvas.height = Display.canvas.width * (9 / 16);
     Globals.gl = canvas.getContext("webgl2", {
       premultipliedAlpha: false, // Ask for non-premultiplied alpha
@@ -35,6 +35,13 @@ export default class Display {
 
   static GetAspectRatioYX() {
     return Display.canvas.height / Display.canvas.width;
+  }
+
+  static SetDisplaySize(width, height){
+    Display.width = width;
+    Display.height = height;
+    Display.canvas.width = width;
+    Display.canvas.height = height;
   }
   static SetBackgroundColor(red, green, blue) {
     Globals.gl.clearColor(red, green, blue, 1);

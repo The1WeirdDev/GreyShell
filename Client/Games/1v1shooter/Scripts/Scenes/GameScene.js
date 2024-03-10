@@ -18,6 +18,11 @@ import Mesh from "/utils/Webgl/Display/Mesh/Mesh.js";
 import NormalMesh from "/utils/Webgl/Display/Mesh/NormalMesh.js";
 import { Vector3 } from "/utils/Utils/Vector.js";
 
+import PointLight from "/utils/Webgl/Lighting/PointLight.js"
+
+import NormalMeshObject from "/utils/Webgl/Objects/NormalMeshObject.js"
+import ObjectRenderer from "/utils/Webgl/Objects/ObjectRenderer.js"
+
 export default class GameScene extends Scene {
 	constructor() {
 		super("GameScene");
@@ -26,45 +31,26 @@ export default class GameScene extends Scene {
 	Init() {
 		this.entity = new Entity();
 
-		Game.colored_object_shader = new ColoredPhongObjectShader();
-		Game.colored_object_shader.Create();
-		Game.colored_object_shader.Start();
-		Game.colored_object_shader.LoadProjectionMatrix(Game.proj_matrix);
+		this.colored_phong_object_shader = new ColoredPhongObjectShader();
+		this.colored_phong_object_shader.Create();
+		this.colored_phong_object_shader.Start();
+		this.colored_phong_object_shader.LoadProjectionMatrix(Game.proj_matrix);
 
-		var distance = 20;
-		this.floor_mesh = new NormalMesh();
-		this.floor_mesh.Create(
-			[
-				-distance,
-				0,
-				-distance,
-				distance,
-				0,
-				-distance,
-				-distance,
-				0,
-				distance,
-				distance,
-				0,
-				distance,
-			],
-			[0, 1, 2, 2, 1, 3],
-			[0, 1, 0, 0, 1, 0,0, 1, 0, 0, 1, 0,
-			0, 1, 0, 0, 1, 0,0, 1, 0, 0, 1, 0,
-		0, 1, 0, 0, 1, 0,0, 1, 0, 0, 1, 0,
-	0, 1, 0, 0, 1, 0,0, 1, 0, 0, 1, 0],
-			3,
-		);
+		this.points_lights = [];
 
-		this.light_position = [0,0,1];
-		this.cube_mesh = ShapeCreator.CreateCubeNormalMesh();
-		Game.colored_object_shader.Start();
-		this.light_pos_loc = Game.colored_object_shader.GetUniformLocation("light_1.position");
-		Game.colored_object_shader.LoadVector3Array(Game.colored_object_shader.GetUniformLocation("light_1.color"), [1,1,1]);
-		Game.colored_object_shader.LoadFloat(Game.colored_object_shader.GetUniformLocation("light_1.constant"), 1);
-Game.colored_object_shader.LoadFloat(Game.colored_object_shader.GetUniformLocation("light_1.linear"), 0.09);
-Game.colored_object_shader.LoadFloat(Game.colored_object_shader.GetUniformLocation("light_1.quadratic"), 0.032);
-		Game.LoadProjectionMatrix();
+		this.game_light_1 = new PointLight();
+		this.game_light_1.SetPositionXYZ(0,0,5);
+		this.game_light_2 = new PointLight();
+		this.game_light_2.SetPositionXYZ(0,0,-5);
+
+		this.player_light = new PointLight();
+		//this.points_lights.push(this.game_light_1);
+		//this.points_lights.push(this.game_light_2);
+		this.points_lights.push(this.player_light);
+
+		this.cube_object = new NormalMeshObject();
+		ShapeCreator.CreateCubeNormalMesh(this.cube_object.mesh);
+
 		console.log("INIT");
 	}
 
@@ -88,20 +74,30 @@ Game.colored_object_shader.LoadFloat(Game.colored_object_shader.GetUniformLocati
 		}
 		*/
 		this.entity.Update();
+		this.player_light.SetPosition(this.entity.transform.position);
+		Game.view_matrix = this.entity.transform.matrix;
 
-		Game.view_matrix = MatrixUtils.GenerateViewMatrix(
-			this.entity.position,
-			this.entity.rotation,
-		);
+		this.player_light.SetRange(5);
+		this.cube_object.transform.CalculateTransformationMatrix();
 	}
 
 	Draw() {
-		Game.colored_object_shader.Start();
-		Game.colored_object_shader.LoadViewMatrix(Game.view_matrix);
-		Game.colored_object_shader.LoadTransformationMatrix(mat4.create());
-		Game.colored_object_shader.LoadColorRGB(255, 255, 255);
-		Game.colored_object_shader.LoadVector3Values(this.light_pos_loc, this.entity.position);
+		this.colored_phong_object_shader.Start();
+		this.colored_phong_object_shader.LoadViewMatrix(Game.view_matrix);
+		this.colored_phong_object_shader.LoadTransformationMatrix(mat4.create());
+		this.colored_phong_object_shader.LoadColorRGB(255, 255, 255);
+
+		//L
+		for(var i = 0; i < this.points_lights.length; i++){
+			this.points_lights[i].LoadValuesToShader(this.colored_phong_object_shader, i);
+		}
+		for(var i = this.points_lights.length; i < this.colored_phong_object_shader.max_num_of_points_lights; i++){
+			this.colored_phong_object_shader.LoadFloat(this.colored_phong_object_shader.points_lights[i].constant_loc, 0);
+		}
+
+
 	//	this.floor_mesh.Draw();
-		this.cube_mesh.Draw();
+		//this.cube_mesh.Draw();
+		ObjectRenderer.DrawNormalMeshObject(this.colored_phong_object_shader, this.cube_object);
 	}
 }
