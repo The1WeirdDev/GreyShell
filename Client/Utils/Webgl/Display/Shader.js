@@ -69,7 +69,7 @@ export default class Shader {
   LoadVector2(location, v1, v2){
     Globals.gl.uniform2f(location, v1, v2);
   }
-  
+
   LoadVector3(location, v1, v2, v3){
     Globals.gl.uniform3f(location, v1, v2, v3);
   }
@@ -79,5 +79,12 @@ export default class Shader {
   }
   LoadVector3Array(location, value) {
     Globals.gl.uniform3f(location, value[0], value[1], value[2]);
+  }
+
+  LoadVector2Values(location, value) {
+    Globals.gl.uniform2f(location, value.x, value.y);
+  }
+  LoadVector3Values(location, value) {
+    Globals.gl.uniform3f(location, value.x, value.y, value.z);
   }
 }

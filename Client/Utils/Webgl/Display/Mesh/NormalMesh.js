@@ -37,10 +37,10 @@ export default class NormalMesh extends Mesh {
 		);
 
 		Globals.gl.vertexAttribPointer(
-			3,
+			1,
 			dimensions,
 			Globals.gl.FLOAT,
-			false,
+			true,
 			0,
 			0,
 		);

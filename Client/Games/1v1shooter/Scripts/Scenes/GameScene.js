@@ -1,14 +1,16 @@
 import Scene from "/utils/Scene/Scene.js";
 
-import UI from "/utils/Webgl/Display/UI/UI.js";
-import UIRenderer from "/utils/Webgl/Display/UI/UIRenderer.js";
+import UI from "/utils/Webgl/UI/UI.js";
+import UIRenderer from "/utils/Webgl/UI/UIRenderer.js";
 
-import TextLabel from "/utils/Webgl/Display/UI/TextLabel.js";
+import TextLabel from "/utils/Webgl/UI/TextLabel.js";
 import SceneManager from "/utils/Scene/SceneManager.js";
 
 import Game from "/games/1v1shooter/Scripts/Game.js";
 import Entity from "/games/1v1shooter/Scripts/Entities/Entity.js";
 import MatrixUtils from "/utils/Utils/MatrixUtils.js";
+import Time from "/utils/Utils/Time.js"
+import ShapeCreator from "/utils/Webgl/Display/Mesh/ShapeCreator.js"
 
 import ColoredObjectShader from "/utils/Webgl/Display/Shaders/ColoredObjectShader.js";
 import ColoredPhongObjectShader from "/utils/Webgl/Display/Shaders/ColoredPhongObjectShader.js";
@@ -47,10 +49,21 @@ export default class GameScene extends Scene {
 				distance,
 			],
 			[0, 1, 2, 2, 1, 3],
-			[0, 1, 0, 0, 1, 0],
+			[0, 1, 0, 0, 1, 0,0, 1, 0, 0, 1, 0,
+			0, 1, 0, 0, 1, 0,0, 1, 0, 0, 1, 0,
+		0, 1, 0, 0, 1, 0,0, 1, 0, 0, 1, 0,
+	0, 1, 0, 0, 1, 0,0, 1, 0, 0, 1, 0],
 			3,
 		);
 
+		this.light_position = [0,0,1];
+		this.cube_mesh = ShapeCreator.CreateCubeNormalMesh();
+		Game.colored_object_shader.Start();
+		this.light_pos_loc = Game.colored_object_shader.GetUniformLocation("light_1.position");
+		Game.colored_object_shader.LoadVector3Array(Game.colored_object_shader.GetUniformLocation("light_1.color"), [1,1,1]);
+		Game.colored_object_shader.LoadFloat(Game.colored_object_shader.GetUniformLocation("light_1.constant"), 1);
+Game.colored_object_shader.LoadFloat(Game.colored_object_shader.GetUniformLocation("light_1.linear"), 0.09);
+Game.colored_object_shader.LoadFloat(Game.colored_object_shader.GetUniformLocation("light_1.quadratic"), 0.032);
 		Game.LoadProjectionMatrix();
 		console.log("INIT");
 	}
@@ -87,6 +100,8 @@ export default class GameScene extends Scene {
 		Game.colored_object_shader.LoadViewMatrix(Game.view_matrix);
 		Game.colored_object_shader.LoadTransformationMatrix(mat4.create());
 		Game.colored_object_shader.LoadColorRGB(255, 255, 255);
-		this.floor_mesh.Draw();
+		Game.colored_object_shader.LoadVector3Values(this.light_pos_loc, this.entity.position);
+	//	this.floor_mesh.Draw();
+		this.cube_mesh.Draw();
 	}
 }

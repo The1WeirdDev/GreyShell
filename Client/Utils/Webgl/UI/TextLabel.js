@@ -1,6 +1,5 @@
-import TexturedMesh from "/utils/Webgl/Display/Mesh/TexturedMesh.js";
-import { SizeConstraint,WrapMode,TextAlignMode } from "/utils/Webgl/Display/UI/UI.js";
-import UI from "/utils/Webgl/Display/UI/UI.js";
+import { SizeConstraint,WrapMode,TextAlignMode } from "/utils/Webgl/UI/UI.js";
+import UI from "/utils/Webgl/UI/UI.js";
 
 //Should we create a texture or not?
 

@@ -1,14 +1,14 @@
 import Scene from "/utils/Scene/Scene.js"
 
-import UIRenderer from "/utils/Webgl/Display/UI/UIRenderer.js";
+import UIRenderer from "/utils/Webgl/UI/UIRenderer.js";
 
-import TextLabel from "/utils/Webgl/Display/UI/TextLabel.js";
+import TextLabel from "/utils/Webgl/UI/TextLabel.js";
 import SceneManager from "/utils/Scene/SceneManager.js";
 
 import GameScene from "/games/1v1shooter/Scripts/Scenes/GameScene.js"
 import Time from "/utils/Utils/Time.js"
 
-import { TextAlignMode } from "/utils/Webgl/Display/UI/UI.js";
+import { TextAlignMode } from "/utils/Webgl/UI/UI.js";
 
 export default class MainMenuScene extends Scene{
     constructor(){
@@ -27,14 +27,14 @@ export default class MainMenuScene extends Scene{
             scene.Init();
         })
     }
-    
+
     CleanUp(){
         this.label.CleanUp();
     }
 
     Update(){
     }
-    
+
     LateDraw(){
         UIRenderer.DrawTextLabel(this.label);
     }

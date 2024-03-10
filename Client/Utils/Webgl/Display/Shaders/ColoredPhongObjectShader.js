@@ -21,31 +21,39 @@ export default class ColoredPhongObjectShader extends Shader {
 	`;
 	static fragment_data = `
 		precision mediump float;
-		
+
 		varying vec3 frag_normals;
 		varying vec4 frag_global_position;
 		uniform vec3 color;
 
-		vec3 CalculateSpotLightColor(vec3 light_pos, vec3 light_color){
-			float distance = length(light_pos - frag_global_position.xyz);
-			vec3 light_direction = normalize(light_pos - frag_global_position.xyz);
-			float diffuse = max(dot(frag_normals, light_direction) * distance, 0.1);
-			return diffuse * light_color;
-			
-			/*vec3 diffuse = vec3(0.0);
-			vec3 norm = normalize(frag_normals);
-			vec3 lightDir = normalize(light_pos - FragPos.xyz);  
-			float diff = max(dot(norm, lightDir), 0.2);
-			diffuse = diff * light_color;
-			*/
-			//return diffuse;
+		struct Light{
+			vec3 position;
+			vec3 color;
+
+			float constant;
+			float linear;
+			float quadratic;
+		};
+
+		uniform Light light_1;
+
+		vec3 CalculateSpotLightColor(Light light){
+			float distance = length(light.position - frag_global_position.xyz);
+			vec3 light_direction = normalize(light.position - frag_global_position.xyz);
+			float diffuse = max(dot(frag_normals, light_direction), 0.1);
+			float attenuation = 1.0 / (light.constant + light.linear * distance +
+    		    light.quadratic * (distance * distance));
+			return diffuse * attenuation * light.color * color;
 		}
-		
+
+		vec3 CalculateDirectionalLight(vec3 light_dir, vec3 light_color, float min_light_level){
+			float diffuse = max(dot(frag_normals, normalize(-light_dir)), min_light_level);
+			return diffuse * light_color * color;
+		}
 		void main() {
-			vec3 light_pos = vec3(0,1,0);
-			vec3 light_color = vec3(1,1,1);
-			vec3 diffuse = CalculateSpotLightColor(light_pos, light_color);
-			gl_FragColor = vec4(diffuse * color, 1);
+			vec3 ambient = CalculateDirectionalLight(vec3(1,-1,1), vec3(1,1,1), 0.0);
+			vec3 diffuse = CalculateSpotLightColor(light_1);
+			gl_FragColor = vec4((ambient + diffuse), 1);
 		}
 	`;
 	constructor() {

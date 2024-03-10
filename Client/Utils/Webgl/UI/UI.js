@@ -4,7 +4,7 @@ import UITexturedFrameShader from "/utils/Webgl/Display/Shaders/UI/UITexturedFra
 import UITextLabelShader from "/utils/Webgl/Display/Shaders/UI/UITextLabelShader.js";
 import Display from "/utils/Webgl/Display/Display.js";
 import Mouse from "/utils/Utils/Input/Mouse.js";
-import UIRenderer from "/utils/Webgl/Display/UI/UIRenderer.js";
+import UIRenderer from "/utils/Webgl/UI/UIRenderer.js";
 //Default x y width height will be relative to screen
 //Coordinate space is -0.5, 0.5 for x y
 

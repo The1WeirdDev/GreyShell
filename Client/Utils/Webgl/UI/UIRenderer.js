@@ -1,9 +1,9 @@
-import UI from "/utils/Webgl/Display/UI/UI.js";
-import { SizeConstraint } from "/utils/Webgl/Display/UI/UI.js";
-import { WrapMode } from "/utils/Webgl/Display/UI/UI.js";
+import UI from "/utils/Webgl/UI/UI.js";
+import { SizeConstraint } from "/utils/Webgl/UI/UI.js";
+import { WrapMode } from "/utils/Webgl/UI/UI.js";
 import Display from "/utils/Webgl/Display/Display.js";
 import Texture from "/utils/Webgl/Display/Texture.js";
-import { TextAlignMode } from "/utils/Webgl/Display/UI/UI.js";
+import { TextAlignMode } from "/utils/Webgl/UI/UI.js";
 
 export default class UIRenderer {
   static GetSizeWithConstraint(width, height, constraint) {
@@ -129,11 +129,11 @@ export default class UIRenderer {
       text_label.height,
       text_label.constraint,
     );
-    
+
     var x = 0;
     var y = 0;
     var measured_size = UIRenderer.MeasureTextSize(text_label);
-    
+
     switch(text_label.text_align){
       case TextAlignMode.Middle:
         x=(text_label.width - measured_size[0]) / 2;

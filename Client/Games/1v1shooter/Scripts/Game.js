@@ -5,12 +5,12 @@ import Globals from "/utils/Webgl/Globals.js";
 import Shader from "/utils/Webgl/Display/Shader.js";
 import Texture from "/utils/Webgl/Display/Texture.js";
 
-import UI from "/utils/Webgl/Display/UI/UI.js";
-import UIRenderer from "/utils/Webgl/Display/UI/UIRenderer.js";
-import { SizeConstraint } from "/utils/Webgl/Display/UI/UI.js";
-import Frame from "/utils/Webgl/Display/UI/Frame.js";
-import TexturedFrame from "/utils/Webgl/Display/UI/TexturedFrame.js";
-import TextLabel from "/utils/Webgl/Display/UI/TextLabel.js";
+import UI from "/utils/Webgl/UI/UI.js";
+import UIRenderer from "/utils/Webgl/UI/UIRenderer.js";
+import { SizeConstraint } from "/utils/Webgl/UI/UI.js";
+import Frame from "/utils/Webgl/UI/Frame.js";
+import TexturedFrame from "/utils/Webgl/UI/TexturedFrame.js";
+import TextLabel from "/utils/Webgl/UI/TextLabel.js";
 
 import Entity from "/games/1v1shooter/Scripts/Entities/Entity.js";
 
@@ -42,7 +42,7 @@ var fragment_data = `
 
 		varying vec2 _texture_coord;
 		uniform sampler2D textureID;
-		
+
 		void main() {
 				gl_FragColor = texture2D(textureID,_texture_coord);
 		}

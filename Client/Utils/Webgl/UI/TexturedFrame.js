@@ -1,5 +1,5 @@
-import Frame from "/utils/Webgl/Display/UI/Frame.js";
-import UI from "/utils/Webgl/Display/UI/UI.js";
+import Frame from "/utils/Webgl/UI/Frame.js";
+import UI from "/utils/Webgl/UI/UI.js";
 
 export default class TexturedFrame extends Frame {
   constructor(x, y, width, height, texture) {

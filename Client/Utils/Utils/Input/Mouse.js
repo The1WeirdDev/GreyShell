@@ -1,5 +1,5 @@
 import Display from "/utils/Webgl/Display/Display.js";
-import UI from "/utils/Webgl/Display/UI/UI.js"
+import UI from "/utils/Webgl/UI/UI.js"
 
 export default class Mouse{
     static Init(){
@@ -20,7 +20,7 @@ export default class Mouse{
             if(Mouse.buttons[button] > 1)
                 Mouse.buttons[button] = 1;
         }
-        
+
         Mouse.delta.x = Mouse.position.x - Mouse.last_position.x;
         Mouse.delta.y = Mouse.position.y - Mouse.last_position.y;
         Mouse.last_position.x = Mouse.position.x;
@@ -39,7 +39,7 @@ export default class Mouse{
 
         if(button < 0 || button >= 8)
             return;
-        
+
         Mouse.buttons[button] = 2;
         Mouse.buttons_to_update.push({"button":button});
         UI.OnMouseButtonClick(button);
