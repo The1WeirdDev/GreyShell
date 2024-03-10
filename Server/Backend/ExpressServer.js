@@ -122,6 +122,42 @@ class ExpressServer {
 
         ExpressServer.SendUserTo(res, "Client/Emulators/" + url);
         return;
+      }if (url.startsWith("/compilers")) {
+        //Is a game
+        url = url.slice("/compilers".length);
+        if (url.endsWith("/")) url = url.slice(0, -1);
+
+        if (url == "") {
+          ExpressServer.SendUserTo(
+            res,
+            "Client/Compilers/Compilers/Index.html",
+          );
+          return;
+        }
+
+        if (url.startsWith("/")) url = url.slice(1);
+
+        var parts = url.split("/");
+        if (WebPages.IsCompilerName(parts[0])) {
+          url = url.slice(parts[0].length + 1);
+
+          if (url == "") {
+            ExpressServer.SendUserTo(
+              res,
+              "Client/Compilers/" + parts[0] + "/Index.html",
+            );
+            return;
+          }
+
+          ExpressServer.SendUserTo(
+            res,
+            "Client/Compilers/" + parts[0] + "/" + url,
+          );
+          return;
+        }
+
+        ExpressServer.SendUserTo(res, "Client/Emulators/" + url);
+        return;
       }
       if (url.startsWith("/Client")) {
         ExpressServer.SendUserTo(res, url.slice(1));

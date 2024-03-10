@@ -1,0 +1,29 @@
+body{
+  background: #3B3936;
+}
+
+#everything_container{
+  display:flex;
+}
+.coding_block{
+  width:45%;
+  height:500px;
+  background:black;
+  border-radius: 10px;
+  min-width: 600px;
+  max-width: min(width)
+  resize:horizontal;
+  position: relative;
+  resize: horizontal;
+  overflow: hidden;
+}
+.output_block{
+  margin-left:0px;
+  width:45%;
+  min-width: 200px;
+  height:500px;
+  background: gray;
+  border-radius: 8px;
+  resize:horizontal;
+  position: relative;
+}

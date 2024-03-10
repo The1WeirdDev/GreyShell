@@ -16,6 +16,15 @@ class WebPages {
         return false;
     }
   }
+
+  static IsCompilerName(name){
+    switch(name){
+      case "A++":
+        return true;
+      default:
+        return false;
+    }
+  }
   static IsEmulatorName(name) {
     switch (name) {
       case "chip8":
