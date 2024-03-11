@@ -7,7 +7,7 @@ export default class ColoredPhongObjectShader extends Shader {
         attribute vec3 position;
         attribute vec3 normals;
 				varying vec3 frag_normals;
-				varying vec4 frag_global_position;
+				varying vec3 frag_global_position;
 
         uniform mat4 projection_matrix;
         uniform mat4 view_matrix;
@@ -15,8 +15,8 @@ export default class ColoredPhongObjectShader extends Shader {
 
         void main() {
 					frag_normals = normals;
-					frag_global_position = transformation_matrix * vec4(position, 1);
-          gl_Position = projection_matrix * view_matrix * frag_global_position;
+					frag_global_position = vec3(transformation_matrix * vec4(position, 1));
+          gl_Position = projection_matrix * view_matrix * transformation_matrix * vec4(position, 1);
         }
 	`;
 	static fragment_data = `
@@ -26,7 +26,7 @@ export default class ColoredPhongObjectShader extends Shader {
 		#define MAX_NUM_OF_SPOT_LIGHTS 10
 
 		varying vec3 frag_normals;
-		varying vec4 frag_global_position;
+		varying vec3 frag_global_position;
 		uniform vec3 color;
 
 		struct PointLight{
@@ -59,23 +59,23 @@ export default class ColoredPhongObjectShader extends Shader {
 		}
 
 		vec3 CalculatePointLightValues(PointLight light){
-			float distance = length(light.position - frag_global_position.xyz);
-			vec3 light_direction = normalize(light.position - frag_global_position.xyz);
+			float distance = length(light.position - frag_global_position);
+			vec3 light_direction = normalize(light.position - frag_global_position);
 			float diffuse = max(dot(frag_normals, light_direction), 0.1);
 			float attenuation = 1.0 / (light.constant + light.linear * distance +
     		    light.quadratic * (distance * distance));
 			return diffuse * attenuation * light.color * color;
 		}
 		vec3 CalculateSpotLightValues(SpotLight light){
-			//float distance = length(light.position - frag_global_position.xyz);
-			vec3 light_direction = normalize(frag_global_position.xyz - light.position);
+			float distance = length(light.position - frag_global_position);
+			vec3 direction_to_light = normalize(light.position - frag_global_position);
 			float value = 0.0;
 
-			float theta = dot(light_direction, normalize(vec3(light.direction.z, light.direction.y, light.direction.x)));
-			if(theta > light.cutoff){
-				//float attenuation = 1.0 / (light.constant + light.linear * distance +
-	    	//	    light.quadratic * (distance * distance));
-				value = 1.0;////max(dot(frag_normals, light_direction), 0.0) * attenuation;
+			float factor = dot(direction_to_light, normalize(-light.direction));
+			if(factor > light.cutoff){
+				float attenuation = 1.0 / (light.constant + light.linear * distance +
+	    		    light.quadratic * (distance * distance));
+				value = max(dot(frag_normals, direction_to_light), 0.0) * attenuation;
 			}
 			return value * light.color * color;
 		}
@@ -89,7 +89,7 @@ export default class ColoredPhongObjectShader extends Shader {
 					accumulated += CalculatePointLightValues(point_lights[i]);
 			}
 
-			for(int i = 0; i < MAX_NUM_OF_SPOT_LIGHTS; i++){
+			for(int i = 0; i < 1; i++){
 				if(spot_lights[i].constant != 0.0){
 					accumulated += CalculateSpotLightValues(spot_lights[i]);
 				}

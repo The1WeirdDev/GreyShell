@@ -73,9 +73,14 @@ export default class GameScene extends Scene {
 		Game.view_matrix = this.entity.transform.matrix;
 
 		this.cube_object.transform.CalculateTransformationMatrix();
-		this.flash_light.SetDirection(this.entity.transform.rotation);
+		var rot = Vector3.Clone(this.entity.transform.rotation);
+		rot.x = Math.cos(this.entity.transform.rotation.z) * Math.sin(this.entity.transform.rotation.y);
+		rot.y = -Math.sin(this.entity.transform.rotation.z);
+		rot.z = -Math.cos(this.entity.transform.rotation.z) * Math.cos(this.entity.transform.rotation.y);
+		this.flash_light.SetDirection(rot);
+		this.flash_light.angle += ((3.14159 / 180)* Time.delta_time);
+		this.flash_light.CalculateCutoff();
 		this.flash_light.SetPosition(this.entity.transform.position);
-		this.LoadLights();
 	}
 
 	LoadLights(){
@@ -95,6 +100,7 @@ export default class GameScene extends Scene {
 	}
 	Draw() {
 		this.colored_phong_object_shader.Start();
+		this.LoadLights();
 		this.colored_phong_object_shader.LoadViewMatrix(Game.view_matrix);
 		this.colored_phong_object_shader.LoadTransformationMatrix(mat4.create());
 		this.colored_phong_object_shader.LoadColorRGB(255, 255, 255);

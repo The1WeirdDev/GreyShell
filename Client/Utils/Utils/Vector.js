@@ -11,6 +11,7 @@ export class Vector3 {
 		this.y = y | 0;
 		this.z = z | 0;
 	}
+
 	GetMagnitude() {
 		return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 	}
@@ -31,5 +32,9 @@ export class Vector3 {
 
 	Dot(vector3) {
 		return this.x * vector3.x + this.y * vector3.y + this.z * vector3.z;
+	}
+
+	static Clone(vector3){
+		return new Vector3(vector3.x, vector3.y, vector3.z);
 	}
 }
