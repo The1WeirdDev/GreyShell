@@ -1,22 +1,26 @@
 import Scene from "/utils/Scene/Scene.js";
 
 import UI from "/utils/Webgl/UI/UI.js";
-import UIRenderer from "/utils/Webgl/UI/UIRenderer.js";
-
 import TextLabel from "/utils/Webgl/UI/TextLabel.js";
+import UIRenderer from "/utils/Webgl/UI/UIRenderer.js";
+import Frame from "/utils/Webgl/UI/Frame.js"
+import Image from "/utils/Webgl/UI/Image.js"
+
 import SceneManager from "/utils/Scene/SceneManager.js";
 
 import Game from "/games/1v1shooter/Scripts/Game.js";
+import Display from "/utils/Webgl/Display/Display.js"
 import Entity from "/games/1v1shooter/Scripts/Entities/Entity.js";
 import MatrixUtils from "/utils/Utils/MatrixUtils.js";
 import Time from "/utils/Utils/Time.js"
 import ShapeCreator from "/utils/Webgl/Display/Mesh/ShapeCreator.js"
+import { Vector3 } from "/utils/Utils/Vector.js";
 
 import ColoredObjectShader from "/utils/Webgl/Display/Shaders/ColoredObjectShader.js";
 import ColoredPhongObjectShader from "/utils/Webgl/Display/Shaders/ColoredPhongObjectShader.js";
+
 import Mesh from "/utils/Webgl/Display/Mesh/Mesh.js";
 import NormalMesh from "/utils/Webgl/Display/Mesh/NormalMesh.js";
-import { Vector3 } from "/utils/Utils/Vector.js";
 
 import PointLight from "/utils/Webgl/Lighting/PointLight.js"
 import SpotLight from "/utils/Webgl/Lighting/SpotLight.js"
@@ -46,6 +50,12 @@ export default class GameScene extends Scene {
 		this.cube_object = new NormalMeshObject();
 		this.cube_object.transform.SetScaleXYZ(5,5,5);
 		ShapeCreator.CreateCubeNormalMesh(this.cube_object.mesh);
+
+		this.full_screen_button = new Image();
+		this.full_screen_button.AddMouseButtonClickEvent(0, ()=>{
+			Display.SetAbsolutePosition(0,0);
+			Display.OnResized(window.innerWidth, window.innerHeight);
+			})
 
 		console.log("INIT");
 	}
@@ -78,8 +88,6 @@ export default class GameScene extends Scene {
 		rot.y = -Math.sin(this.entity.transform.rotation.z);
 		rot.z = -Math.cos(this.entity.transform.rotation.z) * Math.cos(this.entity.transform.rotation.y);
 		this.flash_light.SetDirection(rot);
-		this.flash_light.angle += ((3.14159 / 180)* Time.delta_time);
-		this.flash_light.CalculateCutoff();
 		this.flash_light.SetPosition(this.entity.transform.position);
 	}
 
@@ -110,5 +118,9 @@ export default class GameScene extends Scene {
 		//this.cube_mesh.Draw();
 		this.cube_object.transform.CalculateTransformationMatrix();
 		ObjectRenderer.DrawNormalMeshObject(this.colored_phong_object_shader, this.cube_object);
+	}
+
+	LateDraw(){
+		UIRenderer.DrawFrame(this.full_screen_button)
 	}
 }

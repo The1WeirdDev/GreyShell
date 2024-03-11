@@ -37,11 +37,10 @@ export default class Display {
     return Display.canvas.height / Display.canvas.width;
   }
 
-  static SetDisplaySize(width, height){
-    Display.width = width;
-    Display.height = height;
-    Display.canvas.width = width;
-    Display.canvas.height = height;
+  static SetAbsolutePosition(x, y){
+    Display.canvas.style.position = "fixed";
+    Display.canvas.left = "0px";
+    Display.canvas.top = "0px";;
   }
   static SetBackgroundColor(red, green, blue) {
     Globals.gl.clearColor(red, green, blue, 1);
@@ -52,9 +51,12 @@ export default class Display {
     Globals.gl.blendFunc(Globals.gl.SRC_ALPHA, Globals.gl.ONE_MINUS_SRC_ALPHA);
   }
 
+  //Can also be used to resize manually
   static OnResized(width, height) {
     Display.width = width;
     Display.height = height;
+    Display.canvas.width = width;
+    Display.canvas.height = height;
     Globals.gl.viewport(0, 0, width, height);
   }
 
@@ -64,5 +66,9 @@ export default class Display {
 
   static ClearDepthBuffer() {
     Globals.gl.clear(Globals.gl.DEPTH_BUFFER_BIT);
+  }
+
+  static ToggleFullscreen(){
+    Display.canvas.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
   }
 }

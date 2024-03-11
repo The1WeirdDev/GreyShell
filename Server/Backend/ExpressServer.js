@@ -163,6 +163,7 @@ class ExpressServer {
         ExpressServer.SendUserTo(res, url.slice(1));
         return;
       }
+      console.log(url);
       ExpressServer.SendUserTo(res, "Client/Error/404.html");
     } catch (exception) {}
   }
