@@ -10,7 +10,6 @@ export default class NormalMeshObject{
 
     this.mesh = mesh;
     this.transform = transform;
-    //Should we have a transformation matrix in here?
   }
 
   CreateMesh(vertices, indices, normals, dimensions){

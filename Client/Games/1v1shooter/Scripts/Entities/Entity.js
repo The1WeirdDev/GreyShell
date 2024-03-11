@@ -42,6 +42,11 @@ export default class Entity {
     this.transform.rotation.y += Mouse.delta.x * 0.0174533;
     this.transform.rotation.z -= Mouse.delta.y * 0.0174533;
 
+    while(this.transform.rotation.y < 0)
+      this.transform.rotation.y += 6.28319;
+    while(this.transform.rotation.y > 6.28319)
+      this.transform.rotation.y -= 6.28319;
+
     this.transform.rotation.z = Mathf.Clamp(this.transform.rotation.z, -1.5708, 1.5708);
     this.transform.CalculateViewMatrix();
   }

@@ -19,6 +19,7 @@ import NormalMesh from "/utils/Webgl/Display/Mesh/NormalMesh.js";
 import { Vector3 } from "/utils/Utils/Vector.js";
 
 import PointLight from "/utils/Webgl/Lighting/PointLight.js"
+import SpotLight from "/utils/Webgl/Lighting/SpotLight.js"
 
 import NormalMeshObject from "/utils/Webgl/Objects/NormalMeshObject.js"
 import ObjectRenderer from "/utils/Webgl/Objects/ObjectRenderer.js"
@@ -37,18 +38,13 @@ export default class GameScene extends Scene {
 		this.colored_phong_object_shader.LoadProjectionMatrix(Game.proj_matrix);
 
 		this.points_lights = [];
+		this.spot_lights = [];
 
-		this.game_light_1 = new PointLight();
-		this.game_light_1.SetPositionXYZ(0,0,5);
-		this.game_light_2 = new PointLight();
-		this.game_light_2.SetPositionXYZ(0,0,-5);
-
-		this.player_light = new PointLight();
-		//this.points_lights.push(this.game_light_1);
-		//this.points_lights.push(this.game_light_2);
-		this.points_lights.push(this.player_light);
+		this.flash_light = new SpotLight();
+		this.spot_lights.push(this.flash_light);
 
 		this.cube_object = new NormalMeshObject();
+		this.cube_object.transform.SetScaleXYZ(5,5,5);
 		ShapeCreator.CreateCubeNormalMesh(this.cube_object.mesh);
 
 		console.log("INIT");
@@ -74,20 +70,15 @@ export default class GameScene extends Scene {
 		}
 		*/
 		this.entity.Update();
-		this.player_light.SetPosition(this.entity.transform.position);
 		Game.view_matrix = this.entity.transform.matrix;
 
-		this.player_light.SetRange(5);
 		this.cube_object.transform.CalculateTransformationMatrix();
+		this.flash_light.SetDirection(this.entity.transform.rotation);
+		this.flash_light.SetPosition(this.entity.transform.position);
+		this.LoadLights();
 	}
 
-	Draw() {
-		this.colored_phong_object_shader.Start();
-		this.colored_phong_object_shader.LoadViewMatrix(Game.view_matrix);
-		this.colored_phong_object_shader.LoadTransformationMatrix(mat4.create());
-		this.colored_phong_object_shader.LoadColorRGB(255, 255, 255);
-
-		//L
+	LoadLights(){
 		for(var i = 0; i < this.points_lights.length; i++){
 			this.points_lights[i].LoadValuesToShader(this.colored_phong_object_shader, i);
 		}
@@ -95,9 +86,23 @@ export default class GameScene extends Scene {
 			this.colored_phong_object_shader.LoadFloat(this.colored_phong_object_shader.points_lights[i].constant_loc, 0);
 		}
 
+		for(var i = 0; i < this.spot_lights.length; i++){
+			this.spot_lights[i].LoadValuesToShader(this.colored_phong_object_shader, i);
+		}
+		for(var i = this.spot_lights.length; i < this.colored_phong_object_shader.max_num_of_spot_lights; i++){
+			this.colored_phong_object_shader.LoadFloat(this.colored_phong_object_shader.spot_lights[i].constant_loc, 0);
+		}
+	}
+	Draw() {
+		this.colored_phong_object_shader.Start();
+		this.colored_phong_object_shader.LoadViewMatrix(Game.view_matrix);
+		this.colored_phong_object_shader.LoadTransformationMatrix(mat4.create());
+		this.colored_phong_object_shader.LoadColorRGB(255, 255, 255);
+
 
 	//	this.floor_mesh.Draw();
 		//this.cube_mesh.Draw();
+		this.cube_object.transform.CalculateTransformationMatrix();
 		ObjectRenderer.DrawNormalMeshObject(this.colored_phong_object_shader, this.cube_object);
 	}
 }

@@ -11,6 +11,11 @@ export default class Transform{
         //Some cases will be view_matrix
     }
 
+    SetScaleXYZ(x, y, z){
+      this.scale.x = x;
+      this.scale.y = y;
+      this.scale.z = z;
+    }
     CalculateTransformationMatrix(){
       MatrixUtils.UpdateTransformationMatrixFromTransform(this.matrix, this);
     }
