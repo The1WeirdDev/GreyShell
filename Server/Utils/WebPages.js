@@ -2,7 +2,7 @@ class WebPages {
   static IsGameName(name) {
     switch (name) {
       case "snake":
-      case "1v1shooter":
+      case "rizzy":
       case "matching":
       case "tetris":
       case "snake2":

@@ -8,9 +8,11 @@ import Image from "/utils/Webgl/UI/Image.js"
 
 import SceneManager from "/utils/Scene/SceneManager.js";
 
-import Game from "/games/1v1shooter/Scripts/Game.js";
+import Game from "/games/rizzy/Scripts/Game.js";
+import OBJParser from "/utils/Parsers/OBJParser.js"
+import Physics from "/utils/Physics/Physics.js"
 import Display from "/utils/Webgl/Display/Display.js"
-import Entity from "/games/1v1shooter/Scripts/Entities/Entity.js";
+import Entity from "/games/rizzy/Scripts/Entities/Entity.js";
 import MatrixUtils from "/utils/Utils/MatrixUtils.js";
 import Time from "/utils/Utils/Time.js"
 import ShapeCreator from "/utils/Webgl/Display/Mesh/ShapeCreator.js"
@@ -47,22 +49,25 @@ export default class GameScene extends Scene {
 		this.flash_light = new SpotLight();
 		this.spot_lights.push(this.flash_light);
 
-		this.cube_object = new NormalMeshObject();
-		this.cube_object.transform.SetScaleXYZ(5,5,5);
-		ShapeCreator.CreateCubeNormalMesh(this.cube_object.mesh);
+		this.floor_object = new NormalMeshObject();
+		this.floor_object.transform.SetScaleXYZ(10,0.1,10);
+		this.floor_object.transform.CalculateTransformationMatrix();
+		ShapeCreator.CreateCubeNormalMesh(this.floor_object.mesh);
 
-		this.full_screen_button = new Image();
-		this.full_screen_button.AddMouseButtonClickEvent(0, ()=>{
-			Display.SetAbsolutePosition(0,0);
-			Display.OnResized(window.innerWidth, window.innerHeight);
-			})
 
+		this.wall_object = new NormalMeshObject();
+		OBJParser.ReadURLAsOBJMeshData("/games/rizzy/Res/Meshes/Walls.obj",(mesh_data)=>{
+				this.wall_object.CreateMesh(mesh_data.vertices, mesh_data.indices, mesh_data.normals, 3);
+		})
+
+		Physics.Init();
 		console.log("INIT");
 	}
 
 	CleanUp() {}
 
 	Update() {
+		Physics.Update();
 		//Check for ray intersection
 		/*
 		var plane_direction = new Vector3(0, 0, -1);
@@ -82,7 +87,6 @@ export default class GameScene extends Scene {
 		this.entity.Update();
 		Game.view_matrix = this.entity.transform.matrix;
 
-		this.cube_object.transform.CalculateTransformationMatrix();
 		var rot = Vector3.Clone(this.entity.transform.rotation);
 		rot.x = Math.cos(this.entity.transform.rotation.z) * Math.sin(this.entity.transform.rotation.y);
 		rot.y = -Math.sin(this.entity.transform.rotation.z);
@@ -116,11 +120,10 @@ export default class GameScene extends Scene {
 
 	//	this.floor_mesh.Draw();
 		//this.cube_mesh.Draw();
-		this.cube_object.transform.CalculateTransformationMatrix();
-		ObjectRenderer.DrawNormalMeshObject(this.colored_phong_object_shader, this.cube_object);
+		ObjectRenderer.DrawNormalMeshObject(this.colored_phong_object_shader, this.floor_object);
+		ObjectRenderer.DrawNormalMeshObject(this.colored_phong_object_shader, this.wall_object);
 	}
 
 	LateDraw(){
-		UIRenderer.DrawFrame(this.full_screen_button)
 	}
 }

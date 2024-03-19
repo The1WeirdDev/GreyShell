@@ -12,14 +12,14 @@ import Frame from "/utils/Webgl/UI/Frame.js";
 import TexturedFrame from "/utils/Webgl/UI/TexturedFrame.js";
 import TextLabel from "/utils/Webgl/UI/TextLabel.js";
 
-import Entity from "/games/1v1shooter/Scripts/Entities/Entity.js";
+import Entity from "/games/rizzy/Scripts/Entities/Entity.js";
 
 import Time from "/utils/Utils/Time.js";
 import MatrixUtils from "/utils/Utils/MatrixUtils.js";
 import Keyboard from "/utils/Utils/Input/Keyboard.js";
 import Mouse from "/utils/Utils/Input/Mouse.js";
 
-import MainMenuScene from "/games/1v1shooter/Scripts/Scenes/MainMenuScene.js";
+import MainMenuScene from "/games/rizzy/Scripts/Scenes/MainMenuScene.js";
 import SceneManager from "/utils/Scene/SceneManager.js";
 import Scene from "/utils/Scene/Scene.js";
 import OBJParser from "/utils/Parsers/OBJParser.js";

@@ -76,8 +76,12 @@ export default class Nes {
   Clock() {
     if (this.can_clock == false) return;
 
-    this.cpu.Clock();
+    for(var i = 0; i < 10; i++){
+      this.cpu.Clock();
 
-    this.ppu.Clock();
+      this.ppu.Clock();
+      this.ppu.Clock();
+      this.ppu.Clock();
+    }
   }
 }

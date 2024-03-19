@@ -61,7 +61,8 @@ export default class Display {
   }
 
   static Update() {
-    Globals.gl.clear(Globals.gl.COLOR_BUFFER_BIT | Globals.gl.DEPTH_BUFFER_BIT);
+    // | Globals.gl.DEPTH_BUFFER_BIT
+    Globals.gl.clear(Globals.gl.COLOR_BUFFER_BIT);
   }
 
   static ClearDepthBuffer() {

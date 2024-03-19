@@ -14,6 +14,11 @@ export default class PPU {
     this.canvas = document.getElementById("EmuCanvas");
     this.context = this.canvas.getContext("2d");
 
+    this.scale = 2.25;
+    this.canvas.width = 256 * this.scale;
+    this.canvas.height = 240 * this.scale;
+    this.screen_buffer = new Uint8Array(256 * 240);
+
     this.bus = bus;
 
     this.SetMemVal(PPU.PPU_CTRL_LOC, 0);
@@ -42,7 +47,13 @@ export default class PPU {
     this.SetMemVal(PPU.PPU_DATA_LOC, 0);
   }
 
+  FillRect(x,y, width, height, color){
+    this.context.fillStyle = color;
+    this.context.fillRect(x,y, width, height);
+  }
   Clock() {
     this.SetMemVal(PPU.PPU_STATUS_LOC, 255);
+
+    this.FillRect(0,0, this.canvas.width, this.canvas.height, "hsl(259, 99%, 50%)");
   }
 }

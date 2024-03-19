@@ -3,7 +3,7 @@ import {Vector3} from "/utils/Utils/Vector.js"
 export default class SpotLight{
    constructor(){
      this.position = new Vector3();
-     this.direction = new Vector3(0,1,0);
+     this.direction = new Vector3(0,0,0);
      this.color = new Vector3(1,1,1);
 
      this.range = 100;
@@ -11,8 +11,7 @@ export default class SpotLight{
      this.linear = 0.09;
      this.quadratic = 0.032;
      this.angle = 12 * (3.14159 / 180)
-     this.cutoff = Math.cos(this.agle);
-
+     this.cutoff = Math.cos(this.angle);
      this.CalculateAttenuation();
    }
 

@@ -72,11 +72,12 @@ export default class ColoredPhongObjectShader extends Shader {
 			float value = 0.0;
 
 			float factor = dot(direction_to_light, normalize(-light.direction));
-			if(factor > light.cutoff){
+			if(factor > 0.9){
 				float attenuation = 1.0 / (light.constant + light.linear * distance +
 	    		    light.quadratic * (distance * distance));
 				value = max(dot(frag_normals, direction_to_light), 0.0) * attenuation;
 			}
+
 			return value * light.color * color;
 		}
 		void main() {

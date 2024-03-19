@@ -11,7 +11,6 @@ export default class MatrixUtils {
   }
   static UpdateTransformationMatrixFromTransform(matrix, transform){
     mat4.identity(matrix);
-    var str = "SDFSDF";
     mat4.translate(matrix, matrix, [transform.position.x, transform.position.y, transform.position.z]);
     mat4.rotate(matrix, matrix, transform.rotation.x, [1, 0, 0]);
     mat4.rotate(matrix, matrix, transform.rotation.y, [0, 1, 0]);

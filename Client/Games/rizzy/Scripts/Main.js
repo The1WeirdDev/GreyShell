@@ -1,4 +1,4 @@
-import Game from "/games/1v1shooter/Scripts/Game.js";
+import Game from "/games/rizzy/Scripts/Game.js";
 
 function Init() {
   Game.Init();
